@@ -24,10 +24,14 @@
 |------|-------|--------|--------|--------|-------------|
 | sandbox-research | 0 | 1 | completed | -- | 2026-02-12 |
 | docker-sandbox | 1 | 1 | completed | 4b01edc | 2026-02-12 |
-| dspy-integration | 1 | 2 | ready | -- | 2026-02-12 |
-| mcp-server | 1 | 2 | ready | -- | 2026-02-12 |
-| session-persistence | 2 | 1 | ready | -- | 2026-02-12 |
-| claude-integration | 2 | 1 | ready | -- | 2026-02-12 |
+| dspy-integration | 1 | 2 | completed | af52b2f | 2026-02-12 |
+| mcp-server | 1 | 2 | completed | af52b2f | 2026-02-12 |
+| session-persistence | 2 | 1 | completed | d1ad217 | 2026-02-12 |
+| claude-integration | 2 | 1 | completed | d1ad217 | 2026-02-12 |
+| search-spike | 3 | 1 | draft | -- | 2026-02-12 |
+| doc-fetcher | 4 | 1 | draft | -- | 2026-02-12 |
+| search-engine | 4 | 1 | draft | -- | 2026-02-12 |
+| orchestrator-integration | 4 | 2 | draft | -- | 2026-02-12 |
 
 ### Phase 0, Sprint 1: Sandbox Research Spike
 - **Status:** completed
@@ -132,11 +136,29 @@
 | srt-only prototype | 15 pass | 15 pass | PASS |
 | hybrid prototype | 7 pass | 7 pass | PASS |
 
+### Phase 3, Sprint 1: Search Engine Research Spike
+- **Status:** draft
+- **Started:** --
+- Actions taken:
+- Files created/modified:
+
+### Phase 4, Sprint 1: Doc Fetcher + Search Engine (parallel)
+- **Status:** draft (blocked by Phase 3)
+- **Started:** --
+- Actions taken:
+- Files created/modified:
+
+### Phase 4, Sprint 2: Orchestrator Integration
+- **Status:** draft (blocked by Phase 4, Sprint 1)
+- **Started:** --
+- Actions taken:
+- Files created/modified:
+
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phase 0 complete, Phase 1 Sprint 1 next |
-| Where am I going? | 5 remaining specs across 2 phases |
-| What's the goal? | MCP-bridged sandbox for Claude Code (RLM pattern) with tiered isolation |
-| What have I learned? | Hybrid (Docker+srt) is best for prod, srt-only for dev; --network=none doesn't work |
-| What have I done? | Research spike complete with prototypes, comparison, and spec updates |
+| Where am I? | Phases 0-2 complete. Phase 3 (knowledge store research spike) next |
+| Where am I going? | 4 remaining specs across 2 phases |
+| What's the goal? | External knowledge store: fetch docs, semantic search, zero context cost |
+| What have I learned? | memvid-sdk uses ONNX (no PyTorch), ~120MB; host-side search avoids container memory limits |
+| What have I done? | Core sandbox complete (77 tests). Knowledge store specs written, brainstorm done |

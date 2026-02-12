@@ -39,6 +39,11 @@ graph TD
     A --> E[session-persistence]
     C --> D[claude-integration]
     C --> E
+
+    SS[search-spike] --> DF[doc-fetcher]
+    SS --> SE[search-engine]
+    DF --> OI[orchestrator-integration]
+    SE --> OI
 ```
 
 ### Per-Spec Decisions
@@ -53,6 +58,11 @@ graph TD
 | mcp-server | stdio transport | Claude Code's native discovery method | claude-integration |
 | mcp-server | Lazy startup | Zero overhead when RLM not needed | all downstream |
 | session-persistence | dill over pickle | Handles lambdas, closures, computed objects | docker-sandbox |
+| search-spike | Research before building | memvid-sdk vs FAISS+ONNX, host vs container — need data | search-engine |
+| doc-fetcher | Host-side fetching | Container has no network; fetcher must run in MCP server | search-engine, orchestrator-integration |
+| doc-fetcher | .md URL first | Cleaner content, no HTML→markdown conversion needed | search-engine (better chunks) |
+| search-engine | ONNX over PyTorch | ~120MB vs ~2GB model dependency; ONNX runs on CPU efficiently | all downstream |
+| orchestrator-integration | Additive to Stage 4 | Keep existing cheat-sheet flow as fallback; add knowledge store on top | orchestrator skill files |
 
 ## Sprint Grouping
 | Sprint | Specs | Can Parallelize |
@@ -61,6 +71,9 @@ graph TD
 | Phase 1, Sprint 1 | docker-sandbox | no (single spec) |
 | Phase 1, Sprint 2 | dspy-integration, mcp-server | yes |
 | Phase 2, Sprint 1 | session-persistence, claude-integration | yes |
+| Phase 3, Sprint 1 | search-spike | no (research, single spec) |
+| Phase 4, Sprint 1 | doc-fetcher, search-engine | yes |
+| Phase 4, Sprint 2 | orchestrator-integration | no (single spec) |
 
 ## Research Findings
 
