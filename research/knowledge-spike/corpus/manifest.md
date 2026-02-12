@@ -36,7 +36,7 @@ graph TD
 | 1 | 2 | mcp-server | completed | docker-sandbox |
 | 2 | 1 | session-persistence | completed | docker-sandbox, mcp-server |
 | 2 | 1 | claude-integration | completed | mcp-server |
-| 3 | 1 | search-spike | completed | -- |
+| 3 | 1 | search-spike | draft | -- |
 | 4 | 1 | doc-fetcher | draft | search-spike |
 | 4 | 1 | search-engine | draft | search-spike |
 | 4 | 2 | orchestrator-integration | draft | doc-fetcher, search-engine |

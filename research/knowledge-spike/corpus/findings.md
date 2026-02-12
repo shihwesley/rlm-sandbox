@@ -180,24 +180,6 @@ hosting method (Docker, srt, bare process) remains transparent to DSPy.
 | srt-only as --no-docker fallback | 200ms startup, no Docker dep — tested, 15/15 pass |
 | --dns 0.0.0.0 over --network=none | Port mapping needs bridge network; --dns blocks DNS resolution |
 | Three-tier isolation model | Tier 1 (srt), Tier 2 (Docker+srt), Tier 3 (Docker Sandboxes) — users pick |
-| FAISS+fastembed over memvid-sdk | memvid 0/5 NL recall, no local vec on macOS ARM64; FAISS 5/5 recall, 2.4ms latency |
-| Search engine runs host-side | 1.1GB peak RAM too tight for 2GB container; model download needs network; matches DSPy pattern |
-| BGE-small-en-v1.5 (384d) | Good enough quality (3/5 rank-1 perfect), fast embedding (51 chunks/s), small model (~50MB) |
-| IndexFlatIP for initial impl | HNSW unnecessary at <10K vectors; FlatIP is simpler and equally fast at our scale |
-
-### Knowledge Store Search Decision (2026-02-12, Phase 3 Spike)
-
-**We chose FAISS + fastembed (BGE-small-en-v1.5) because memvid-sdk can't do semantic search on our platform.**
-
-Prototyped both approaches against the same 15-file corpus (52KB, 137 chunks) with 5 natural language queries.
-
-memvid-sdk failed hard: Tantivy's BM25 parser chokes on stop words, returning 0 results for all 5 natural language queries. The vec feature (HNSW + ONNX embeddings) is compiled out of the macOS ARM64 wheel — the only alternative is OpenAI embeddings, which requires API keys we won't put in the container. The Python SDK also had multiple API breaking issues in v2.0.156 (wrong module name, missing methods, broken commit).
-
-FAISS+fastembed worked out of the box: 5/5 queries returned relevant results, 2.4ms average latency, clean Python 3.14 install. Peak RAM is 1.1GB — too tight for the 2GB container, but fine host-side in the MCP server process. This mirrors the DSPy hosting decision: heavy compute stays on the host, container stays lean.
-
-Hosting model: **host-side** (MCP server process). Container has no network for model download, limited memory, and we'd need separate indexes per container. One host-side index serves all sessions.
-
-Full benchmark data: `research/knowledge-spike/benchmark_results.md`
 
 ## Visual/Browser Findings
 - rlmgrep repo structure: 7 core Python files, ~800 lines total

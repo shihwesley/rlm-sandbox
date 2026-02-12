@@ -4,7 +4,7 @@ phase: 3
 sprint: 1
 parent: null
 depends_on: []
-status: draft
+status: completed
 created: 2026-02-12
 ---
 
