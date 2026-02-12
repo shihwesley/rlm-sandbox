@@ -23,7 +23,7 @@
 | Spec | Phase | Sprint | Status | Commit | Last Updated |
 |------|-------|--------|--------|--------|-------------|
 | sandbox-research | 0 | 1 | completed | -- | 2026-02-12 |
-| docker-sandbox | 1 | 1 | ready | -- | 2026-02-12 |
+| docker-sandbox | 1 | 1 | completed | 4b01edc | 2026-02-12 |
 | dspy-integration | 1 | 2 | ready | -- | 2026-02-12 |
 | mcp-server | 1 | 2 | ready | -- | 2026-02-12 |
 | session-persistence | 2 | 1 | ready | -- | 2026-02-12 |
@@ -56,10 +56,26 @@
   - docs/plans/specs/claude-integration-spec.md (updated)
 
 ### Phase 1, Sprint 1: Docker Sandbox
-- **Status:** ready (specs reviewed, all decisions resolved)
-- **Started:** --
+- **Status:** completed
+- **Started:** 2026-02-12
+- **Completed:** 2026-02-12
+- **Tests:** 8/8 passed
+- **Commit:** 4b01edc
 - Actions taken:
+  - Created Dockerfile (python:3.12-slim + curl, uvicorn CMD)
+  - Created docker-compose.yml (dns 0.0.0.0, 2GB mem, 2 CPU, /workspace volume, healthcheck)
+  - Implemented sandbox/repl.py (IPython kernel manager with timeout via threading)
+  - Implemented sandbox/server.py (FastAPI routes: /exec, /vars, /var/:name, /health)
+  - Wrote 8 integration tests covering all acceptance criteria
+  - Fixed test ordering: timeout before memory (OOM may kill container)
+  - Memory test accepts both MemoryError and OOM-killed connection reset
 - Files created/modified:
+  - Dockerfile
+  - docker-compose.yml
+  - pyproject.toml
+  - sandbox/__init__.py, sandbox/repl.py, sandbox/requirements.txt, sandbox/server.py
+  - tests/__init__.py, tests/test_sandbox.py
+  - workspace/.gitkeep, .gitignore
 
 ### Phase 1, Sprint 2: DSPy (host-side) + MCP Server (parallel)
 - **Status:** ready (blocked by Sprint 1, all decisions resolved)

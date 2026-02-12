@@ -26,7 +26,7 @@ graph TD
 | Phase | Sprint | Spec | Status | Depends On |
 |-------|--------|------|--------|------------|
 | 0 | 1 | sandbox-research | completed | -- |
-| 1 | 1 | docker-sandbox | ready | sandbox-research |
+| 1 | 1 | docker-sandbox | completed | sandbox-research |
 | 1 | 2 | dspy-integration | ready | docker-sandbox |
 | 1 | 2 | mcp-server | ready | docker-sandbox |
 | 2 | 1 | session-persistence | ready | docker-sandbox, mcp-server |
