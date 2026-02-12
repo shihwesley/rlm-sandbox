@@ -27,8 +27,8 @@ graph TD
 |-------|--------|------|--------|------------|
 | 0 | 1 | sandbox-research | completed | -- |
 | 1 | 1 | docker-sandbox | completed | sandbox-research |
-| 1 | 2 | dspy-integration | ready | docker-sandbox |
-| 1 | 2 | mcp-server | ready | docker-sandbox |
+| 1 | 2 | dspy-integration | completed | docker-sandbox |
+| 1 | 2 | mcp-server | completed | docker-sandbox |
 | 2 | 1 | session-persistence | ready | docker-sandbox, mcp-server |
 | 2 | 1 | claude-integration | ready | mcp-server |
 

@@ -78,11 +78,30 @@
   - workspace/.gitkeep, .gitignore
 
 ### Phase 1, Sprint 2: DSPy (host-side) + MCP Server (parallel)
-- **Status:** ready (blocked by Sprint 1, all decisions resolved)
-- **Started:** --
+- **Status:** completed
+- **Started:** 2026-02-12
+- **Completed:** 2026-02-12
+- **Tests:** 42/42 passed (8 sandbox + 8 MCP integration + 26 DSPy mock-based)
+- **Commit:** af52b2f
 - **Architecture change:** DSPy moved host-side to MCP server (no API key in container)
 - Actions taken:
+  - Created mcp_server/ package (renamed from mcp-server/ — hyphens aren't valid Python package names)
+  - Implemented DockerManager with lazy startup, health loop, --no-docker fallback
+  - Implemented MCPServer with lifespan, stdio transport, 6 tools (exec, load, get, vars, sub_agent, reset)
+  - Implemented SandboxInterpreter (CodeInterpreter protocol: execute + __call__)
+  - Implemented run_sub_agent() with DSPy RLM, Haiku 4.5 sub_lm, configurable limits
+  - Built custom signature builder (build_custom_signature) and pre-built signatures
+  - Added llm_query callback (container stub POSTs to host, API keys stay host-side)
+  - Added path denylist on rlm_load (defense-in-depth, matches srt-config)
+  - Fixed reset to use get_ipython().reset() (kernel object not in IPython namespace)
+  - Fixed asyncio test helper for Python 3.14 (asyncio.run() not get_event_loop())
+  - Fixed test assertions (DSPy Signature field access, ternary precedence)
+  - Port corrected from 8000 to 8080 (matching docker-compose.yml)
 - Files created/modified:
+  - mcp_server/__init__.py, docker_manager.py, server.py, tools.py, sub_agent.py, signatures.py
+  - mcp_server/requirements.txt, srt-config.json
+  - tests/test_mcp_server.py, tests/test_sub_agent.py
+  - .gitignore (fixed __pycache__ pattern)
 
 ### Phase 2, Sprint 1: Persistence + Claude Integration (parallel)
 - **Status:** ready (blocked by Phase 1, all decisions resolved)
