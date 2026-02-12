@@ -1,0 +1,5 @@
+{
+  "allowLocalBinding": true,
+  "denyRead": ["~/.ssh", "~/.aws", "~/.config/gcloud"],
+  "allowWrite": ["~/.rlm-sandbox"]
+}

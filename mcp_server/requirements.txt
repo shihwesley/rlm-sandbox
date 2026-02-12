@@ -1,0 +1,4 @@
+mcp[cli]
+docker
+httpx
+dspy
