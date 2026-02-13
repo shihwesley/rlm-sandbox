@@ -13,6 +13,7 @@ from mcp.server.fastmcp import FastMCP
 from mcp_server.docker_manager import DockerManager
 from mcp_server.fetcher import register_fetcher_tools
 from mcp_server.knowledge import KnowledgeStore, get_store, register_knowledge_tools
+from mcp_server.research import register_research_tools
 from mcp_server.session import SessionManager
 from mcp_server.tools import register_tools
 
@@ -61,6 +62,7 @@ mcp = FastMCP("rlm-sandbox", lifespan=lifespan)
 register_tools(mcp)
 register_knowledge_tools(mcp)
 register_fetcher_tools(mcp)
+register_research_tools(mcp)
 
 
 if __name__ == "__main__":
