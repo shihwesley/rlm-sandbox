@@ -1,7 +1,7 @@
 ---
 project: rlm-sandbox
 created: 2026-02-11
-updated: 2026-02-12
+updated: 2026-02-13
 mode: spec-driven
 priority: quality
 ---
@@ -37,9 +37,11 @@ graph TD
 | 2 | 1 | session-persistence | completed | docker-sandbox, mcp-server |
 | 2 | 1 | claude-integration | completed | mcp-server |
 | 3 | 1 | search-spike | completed | -- |
-| 4 | 1 | doc-fetcher | draft | search-spike |
-| 4 | 1 | search-engine | draft | search-spike |
+| 4 | 1 | doc-fetcher | completed | search-spike |
+| 4 | 1 | search-engine | completed | search-spike |
 | 4 | 2 | orchestrator-integration | draft | doc-fetcher, search-engine |
+
+**Note (2026-02-13):** Phase 4 specs rewritten to use memvid-sdk instead of FAISS+fastembed. Decision reversal documented in findings.md.
 
 ## Spec Files
 
@@ -51,10 +53,10 @@ graph TD
 | mcp-server | docs/plans/specs/mcp-server-spec.md | ~60 | Host-side MCP, Docker lifecycle, stdio |
 | session-persistence | docs/plans/specs/session-persistence-spec.md | ~45 | Save/restore sandbox state via dill |
 | claude-integration | docs/plans/specs/claude-integration-spec.md | ~40 | mcp-config.json, CLAUDE.md rules |
-| search-spike | docs/plans/specs/search-spike-spec.md | ~70 | Evaluate memvid-sdk vs FAISS+ONNX, host vs container |
-| doc-fetcher | docs/plans/specs/doc-fetcher-spec.md | ~70 | URL fetching, .md detection, bulk local loading, freshness |
-| search-engine | docs/plans/specs/search-engine-spec.md | ~80 | Semantic search, chunking, embedding, indexing, rlm_search |
-| orchestrator-integration | docs/plans/specs/orchestrator-integration-spec.md | ~65 | Wire into /orchestrate Stage 4 and /interactive-planning |
+| search-spike | docs/plans/specs/search-spike-spec.md | ~63 | Evaluate memvid-sdk vs FAISS+ONNX (completed: chose FAISS, then reversed to memvid) |
+| doc-fetcher | docs/plans/specs/doc-fetcher-spec.md | ~101 | URL fetching, .md detection, sitemap, dual storage (raw + .mv2), freshness |
+| search-engine | docs/plans/specs/search-engine-spec.md | ~127 | Memvid knowledge engine: .mv2 backend, hybrid search, adaptive retrieval, timeline |
+| orchestrator-integration | docs/plans/specs/orchestrator-integration-spec.md | ~111 | Wire into /orchestrate + /interactive-planning, rlm_research compound tool |
 
 ## Findings
 -> See findings.md

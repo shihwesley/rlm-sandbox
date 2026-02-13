@@ -28,10 +28,10 @@
 | mcp-server | 1 | 2 | completed | af52b2f | 2026-02-12 |
 | session-persistence | 2 | 1 | completed | d1ad217 | 2026-02-12 |
 | claude-integration | 2 | 1 | completed | d1ad217 | 2026-02-12 |
-| search-spike | 3 | 1 | draft | -- | 2026-02-12 |
-| doc-fetcher | 4 | 1 | draft | -- | 2026-02-12 |
-| search-engine | 4 | 1 | draft | -- | 2026-02-12 |
-| orchestrator-integration | 4 | 2 | draft | -- | 2026-02-12 |
+| search-spike | 3 | 1 | completed | ebd8785 | 2026-02-12 |
+| doc-fetcher | 4 | 1 | draft (rewritten for memvid) | -- | 2026-02-13 |
+| search-engine | 4 | 1 | draft (rewritten for memvid) | -- | 2026-02-13 |
+| orchestrator-integration | 4 | 2 | draft (rewritten for memvid) | -- | 2026-02-13 |
 
 ### Phase 0, Sprint 1: Sandbox Research Spike
 - **Status:** completed
@@ -137,28 +137,72 @@
 | hybrid prototype | 7 pass | 7 pass | PASS |
 
 ### Phase 3, Sprint 1: Search Engine Research Spike
-- **Status:** draft
-- **Started:** --
+- **Status:** completed
+- **Started:** 2026-02-12
+- **Completed:** 2026-02-12
+- **Tests:** N/A (research spike — prototypes ran successfully)
+- **Commit:** ebd8785
+- **Review:** Skipped (research spike, no production code)
 - Actions taken:
+  - Prototyped memvid-sdk: installs on 3.14 but vec feature missing on macOS ARM64, 0/5 NL queries
+  - Prototyped FAISS+fastembed: clean install, 5/5 NL queries, 2.4ms latency, 1.1GB peak RAM
+  - Benchmarked both approaches with identical 15-file corpus and 5 queries
+  - Analyzed host-side vs container-side: host-side wins (memory, model management, shared state)
+  - Decision: FAISS + fastembed (BGE-small-en-v1.5), host-side in MCP server
 - Files created/modified:
+  - research/knowledge-spike/memvid_proto.py (created)
+  - research/knowledge-spike/faiss_proto.py (created)
+  - research/knowledge-spike/memvid_results.md (created)
+  - research/knowledge-spike/faiss_results.md (created)
+  - research/knowledge-spike/benchmark_results.md (created)
+  - research/knowledge-spike/host_vs_container.md (created)
+  - research/knowledge-spike/corpus/ (15 test files)
+  - docs/plans/findings.md (modified — added search decision)
+  - docs/plans/manifest.md (modified — search-spike → completed)
+  - docs/plans/specs/search-spike-spec.md (modified — status → completed)
 
-### Phase 4, Sprint 1: Doc Fetcher + Search Engine (parallel)
-- **Status:** draft (blocked by Phase 3)
-- **Started:** --
+## Session: 2026-02-13
+- Reversed search-spike decision: memvid-sdk replaces FAISS+fastembed
+- Full memvid v2 docs fetched (89 pages) to .claude/docs/memvid/
+- Rewrote Phase 4 specs for memvid integration:
+  - search-engine: memvid .mv2 backend, hybrid search (lex+vec+reranker), adaptive retrieval, timeline
+  - doc-fetcher: dual storage (raw .md files + .mv2 ingestion), sitemap support added
+  - orchestrator-integration: rlm_research compound tool, Context7 routing, agent prompt templates
+- Updated manifest and findings with memvid decision reversal
+
+### Phase 4, Sprint 1: Doc Fetcher + Memvid Knowledge Engine (parallel)
+- **Status:** completed
+- **Started:** 2026-02-13
+- **Completed:** 2026-02-13
+- **Tests:** 174/174 passed (97 new: 47 knowledge + 50 fetcher)
+- **Commit:** 0158cc0
+- **Correction:** Spec called for fastembed-python (BGE-small) but built-in fastembed is broken on all wheels. Used memvid-sdk's get_embedder("huggingface", model="all-MiniLM-L6-v2") instead.
 - Actions taken:
+  - Implemented KnowledgeStore (mcp_server/knowledge.py) — memvid .mv2 wrapper, hybrid search, adaptive retrieval, timeline, entity extraction
+  - Implemented doc-fetcher (mcp_server/fetcher.py) — URL fetching with .md variant detection, sitemap parsing, dual storage (raw + .mv2), freshness tracking
+  - Wired both into server.py lifespan (KnowledgeStore on AppContext, register_knowledge_tools + register_fetcher_tools)
+  - 6 new MCP tools: rlm_search, rlm_ask, rlm_timeline, rlm_ingest, rlm_fetch, rlm_load_dir, rlm_fetch_sitemap
 - Files created/modified:
+  - mcp_server/knowledge.py (created, 367 lines)
+  - mcp_server/fetcher.py (created, 470 lines)
+  - mcp_server/server.py (modified — imports, AppContext.knowledge_store, lifespan wiring)
+  - mcp_server/requirements.txt (added html2text)
+  - tests/test_knowledge.py (created, 771 lines, 47 tests)
+  - tests/test_fetcher.py (created, 649 lines, 50 tests)
 
 ### Phase 4, Sprint 2: Orchestrator Integration
 - **Status:** draft (blocked by Phase 4, Sprint 1)
 - **Started:** --
 - Actions taken:
+  - Rewrote orchestrator-integration-spec.md (rlm_research, knowledge_status, agent prompts)
 - Files created/modified:
+  - docs/plans/specs/orchestrator-integration-spec.md (rewritten)
 
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | Phases 0-2 complete. Phase 3 (knowledge store research spike) next |
-| Where am I going? | 4 remaining specs across 2 phases |
-| What's the goal? | External knowledge store: fetch docs, semantic search, zero context cost |
-| What have I learned? | memvid-sdk uses ONNX (no PyTorch), ~120MB; host-side search avoids container memory limits |
-| What have I done? | Core sandbox complete (77 tests). Knowledge store specs written, brainstorm done |
+| Where am I? | Phases 0-3 complete. Phase 4 specs rewritten for memvid. Ready to implement |
+| Where am I going? | 3 specs: search-engine + doc-fetcher (parallel), then orchestrator-integration |
+| What's the goal? | Memvid knowledge store: fetch docs into .mv2, hybrid search, zero context cost |
+| What have I learned? | memvid v2 has local fastembed (BGE-small), Ollama embeddings, hybrid search, adaptive retrieval. Spike's issues were likely a broken wheel |
+| What have I done? | Core sandbox (77 tests) + search spike complete. Reversed to memvid, rewrote all Phase 4 specs |
