@@ -81,28 +81,12 @@ graph TB
 
 ## Install
 
-### From the Plugin Marketplace (recommended)
-
-Inside Claude Code, open the marketplace and install:
-
 ```
-/plugin marketplace
+/plugin marketplace add shihwesley/shihwesley-plugins
+/plugin install rlm-sandbox@shihwesley-plugins
 ```
 
-Search for **rlm-sandbox** and install it. Done — first run auto-creates a Python venv and installs all dependencies.
-
-### From GitHub
-
-```bash
-claude plugin install github:shihwesley/rlm-sandbox
-```
-
-### From a Local Clone
-
-```bash
-git clone https://github.com/shihwesley/rlm-sandbox.git
-claude plugin install ./rlm-sandbox
-```
+First run auto-creates a Python venv and installs all dependencies.
 
 Docker is optional — knowledge tools work without it, sandbox tools need it.
 
