@@ -1,0 +1,21 @@
+{
+  "name": "rlm-sandbox",
+  "description": "Docker sandbox for Python/DSPy execution with memvid-backed knowledge store. 16 MCP tools: code execution, sub-agents, session persistence, hybrid doc search, and research automation.",
+  "version": "1.0.0",
+  "author": {
+    "name": "shihwesley"
+  },
+  "repository": "https://github.com/shihwesley/rlm-sandbox",
+  "license": "MIT",
+  "keywords": [
+    "sandbox",
+    "docker",
+    "python",
+    "dspy",
+    "knowledge-store",
+    "memvid",
+    "mcp",
+    "research",
+    "rlm"
+  ]
+}
