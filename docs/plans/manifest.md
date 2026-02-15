@@ -24,6 +24,10 @@ graph TD
     SS --> SE[search-engine]
     DF --> OI[orchestrator-integration]
     SE --> OI
+
+    C --> AD[apple-docs-pipeline]
+    SE --> AD
+    C --> RE[recursive-execution]
 ```
 
 ## Phase / Sprint / Spec Map
@@ -40,6 +44,8 @@ graph TD
 | 4 | 1 | doc-fetcher | completed | search-spike |
 | 4 | 1 | search-engine | completed | search-spike |
 | 4 | 2 | orchestrator-integration | completed | doc-fetcher, search-engine |
+| 5 | 1 | apple-docs-pipeline | completed | mcp-server, search-engine |
+| 5 | 1 | recursive-execution | completed | mcp-server |
 
 **Note (2026-02-13):** Phase 4 specs rewritten to use memvid-sdk instead of FAISS+fastembed. Decision reversal documented in findings.md.
 

@@ -1,7 +1,7 @@
 # rlm-sandbox
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-209%20passing-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/tests-245%20passing-brightgreen.svg)]()
 [![Claude Code Plugin](https://img.shields.io/badge/Claude%20Code-plugin-8A2BE2.svg)]()
 
 Sandboxed Python execution + zero-context doc search for Claude Code. Run code in Docker without leaking API keys, search indexed documentation without reading files into the context window.
@@ -142,7 +142,7 @@ Output:
 Result: {"answer": "Paris"}
 ```
 
-## Tools (16 total)
+## Tools (20 total)
 
 ### Sandbox (requires Docker)
 
@@ -171,6 +171,15 @@ Result: {"answer": "Paris"}
 | `rlm_fetch(url)` | Fetch URL → raw .md file + .mv2 index |
 | `rlm_load_dir(glob)` | Bulk-load local files into both stores |
 | `rlm_fetch_sitemap(url)` | Fetch all pages from a sitemap |
+
+### Apple Docs (no Docker needed)
+
+| Tool | What it does |
+|------|-------------|
+| `rlm_apple_search(query)` | Search local Apple framework docs via DocSetQuery index |
+| `rlm_apple_export(framework)` | Export framework docs, chunk, and index into knowledge store |
+| `rlm_apple_read(path, anchor)` | Read a specific section from exported Apple doc files |
+| `rlm_context7_ingest(library, content)` | Ingest Context7 docs into the knowledge store |
 
 ### Research & Management (no Docker needed)
 
@@ -264,7 +273,7 @@ A PostToolUse hook on `mcp__context7__query-docs` nudges Claude to also index Co
 Bug reports and PRs welcome.
 
 ```bash
-# Run the full test suite (209 tests)
+# Run the full test suite (245 tests)
 pytest tests/ -v
 
 # Knowledge/fetcher/research only (no Docker)

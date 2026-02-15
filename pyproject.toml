@@ -1,2 +1,9 @@
+[project]
+name = "rlm-sandbox"
+version = "1.0.0"
+description = "Sandboxed Python execution + zero-context doc search for Claude Code"
+requires-python = ">=3.11"
+license = "MIT"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]

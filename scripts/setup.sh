@@ -30,9 +30,11 @@ echo "Installing Python dependencies..."
     uvicorn \
     ipython
 
-# 2. Knowledge store directory
+# 2. Data directories
 mkdir -p ~/.rlm-sandbox/knowledge
+mkdir -p ~/.rlm-sandbox/sessions
 echo "Knowledge store: ~/.rlm-sandbox/knowledge/"
+echo "Session store:   ~/.rlm-sandbox/sessions/"
 
 # 3. Docker (optional — needed for sandbox, not for knowledge tools)
 if command -v docker &>/dev/null; then
@@ -54,4 +56,5 @@ echo ""
 echo "=== Setup complete ==="
 echo "Tools available:"
 echo "  Always:  rlm_search, rlm_ask, rlm_fetch, rlm_research, rlm_knowledge_status"
+echo "  Always:  rlm_apple_search, rlm_apple_export, rlm_apple_read, rlm_context7_ingest"
 echo "  Docker:  rlm_exec, rlm_load, rlm_get, rlm_vars, rlm_sub_agent, rlm_reset"
