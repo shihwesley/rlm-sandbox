@@ -1,0 +1,1477 @@
+{
+  "root": "/Users/quartershots/Source/rlm-sandbox",
+  "files": [
+    {
+      "path": ".claude/cache/context-forward.md",
+      "tokens": 375,
+      "size_bytes": 1460,
+      "hash": "ccbcc5f619e7"
+    },
+    {
+      "path": ".claude-plugin/plugin.json",
+      "tokens": 263,
+      "size_bytes": 956,
+      "hash": "9bfb6549b326"
+    },
+    {
+      "path": "agents/rlm-researcher.md",
+      "tokens": 845,
+      "size_bytes": 3501,
+      "hash": "26114268d90a"
+    },
+    {
+      "path": "agents/rlm-sandbox.md",
+      "tokens": 790,
+      "size_bytes": 3348,
+      "hash": "3f0de2f286af"
+    },
+    {
+      "path": "claude-integration/mcp-config.json",
+      "tokens": 48,
+      "size_bytes": 144,
+      "hash": "f23f12d04a18"
+    },
+    {
+      "path": "claude-integration/rlm-routing-rules.md",
+      "tokens": 991,
+      "size_bytes": 4322,
+      "hash": "1dd52132c656"
+    },
+    {
+      "path": "claude-integration/setup.sh",
+      "tokens": 980,
+      "size_bytes": 3463,
+      "hash": "3fd8106d5c15"
+    },
+    {
+      "path": "docs/plans/specs/claude-integration-spec.md",
+      "tokens": 867,
+      "size_bytes": 3567,
+      "hash": "5b259206ec6a"
+    },
+    {
+      "path": "docs/plans/specs/doc-fetcher-spec.md",
+      "tokens": 1352,
+      "size_bytes": 5139,
+      "hash": "5840341da97c"
+    },
+    {
+      "path": "docs/plans/specs/docker-sandbox-spec.md",
+      "tokens": 1006,
+      "size_bytes": 3816,
+      "hash": "35dd23f9242a"
+    },
+    {
+      "path": "docs/plans/specs/dspy-integration-spec.md",
+      "tokens": 931,
+      "size_bytes": 3757,
+      "hash": "383dd7738b27"
+    },
+    {
+      "path": "docs/plans/specs/mcp-server-spec.md",
+      "tokens": 1396,
+      "size_bytes": 5485,
+      "hash": "ea9bf681250d"
+    },
+    {
+      "path": "docs/plans/specs/orchestrator-integration-spec.md",
+      "tokens": 1337,
+      "size_bytes": 5260,
+      "hash": "02dec84b7ff0"
+    },
+    {
+      "path": "docs/plans/specs/sandbox-research-spec.md",
+      "tokens": 1067,
+      "size_bytes": 4428,
+      "hash": "784336f7132d"
+    },
+    {
+      "path": "docs/plans/specs/search-engine-spec.md",
+      "tokens": 1636,
+      "size_bytes": 6320,
+      "hash": "dcc7974d1bb9"
+    },
+    {
+      "path": "docs/plans/specs/search-spike-spec.md",
+      "tokens": 709,
+      "size_bytes": 2863,
+      "hash": "289434adc945"
+    },
+    {
+      "path": "docs/plans/specs/session-persistence-spec.md",
+      "tokens": 812,
+      "size_bytes": 3463,
+      "hash": "e2dc1945a4fb"
+    },
+    {
+      "path": "docs/plans/context-forward.md",
+      "tokens": 375,
+      "size_bytes": 1460,
+      "hash": "ccbcc5f619e7"
+    },
+    {
+      "path": "docs/plans/findings.md",
+      "tokens": 3507,
+      "size_bytes": 14234,
+      "hash": "056493e21fcb"
+    },
+    {
+      "path": "docs/plans/manifest.md",
+      "tokens": 855,
+      "size_bytes": 2972,
+      "hash": "4ddfc650f63c"
+    },
+    {
+      "path": "docs/plans/progress.md",
+      "tokens": 3284,
+      "size_bytes": 11800,
+      "hash": "0bbffe14780d"
+    },
+    {
+      "path": "docs/.mercator.json",
+      "tokens": 11708,
+      "size_bytes": 37400,
+      "hash": "8050b5a8f6ad"
+    },
+    {
+      "path": "docs/.mercator.json.tmp",
+      "tokens": 0,
+      "size_bytes": 0,
+      "hash": "e3b0c44298fc"
+    },
+    {
+      "path": "docs/CODEBASE_MAP.md",
+      "tokens": 2845,
+      "size_bytes": 10637,
+      "hash": "0fdcf83cf6bd"
+    },
+    {
+      "path": "hooks/hooks.json",
+      "tokens": 101,
+      "size_bytes": 381,
+      "hash": "1eedfd8197ab"
+    },
+    {
+      "path": "mcp_server/__init__.py",
+      "tokens": 0,
+      "size_bytes": 0,
+      "hash": "e3b0c44298fc"
+    },
+    {
+      "path": "mcp_server/apple_docs.py",
+      "tokens": 3311,
+      "size_bytes": 14964,
+      "hash": "60695d4065bc"
+    },
+    {
+      "path": "mcp_server/docker_manager.py",
+      "tokens": 1474,
+      "size_bytes": 7137,
+      "hash": "22258ae9df80"
+    },
+    {
+      "path": "mcp_server/fetcher.py",
+      "tokens": 3555,
+      "size_bytes": 15477,
+      "hash": "c030f5fc7c4b"
+    },
+    {
+      "path": "mcp_server/knowledge.py",
+      "tokens": 2641,
+      "size_bytes": 11738,
+      "hash": "1bb609489b7a"
+    },
+    {
+      "path": "mcp_server/llm_callback.py",
+      "tokens": 1139,
+      "size_bytes": 5057,
+      "hash": "78a413053f7d"
+    },
+    {
+      "path": "mcp_server/requirements.txt",
+      "tokens": 37,
+      "size_bytes": 99,
+      "hash": "f1d78e92c3c2"
+    },
+    {
+      "path": "mcp_server/research.py",
+      "tokens": 2237,
+      "size_bytes": 9700,
+      "hash": "e69af1664e3b"
+    },
+    {
+      "path": "mcp_server/server.py",
+      "tokens": 630,
+      "size_bytes": 2958,
+      "hash": "86700a62b299"
+    },
+    {
+      "path": "mcp_server/session.py",
+      "tokens": 1036,
+      "size_bytes": 4748,
+      "hash": "fbf9bc3be83f"
+    },
+    {
+      "path": "mcp_server/signatures.py",
+      "tokens": 720,
+      "size_bytes": 2886,
+      "hash": "35e79393210e"
+    },
+    {
+      "path": "mcp_server/srt-config.json",
+      "tokens": 43,
+      "size_bytes": 124,
+      "hash": "2e01bb6a2c20"
+    },
+    {
+      "path": "mcp_server/sub_agent.py",
+      "tokens": 1505,
+      "size_bytes": 6401,
+      "hash": "6616407c7080"
+    },
+    {
+      "path": "mcp_server/tools.py",
+      "tokens": 1297,
+      "size_bytes": 5414,
+      "hash": "8d3ab920cb72"
+    },
+    {
+      "path": "research/hybrid-prototype/Dockerfile",
+      "tokens": 37,
+      "size_bytes": 103,
+      "hash": "02618935f346"
+    },
+    {
+      "path": "research/hybrid-prototype/kernel.py",
+      "tokens": 676,
+      "size_bytes": 2786,
+      "hash": "ce1441047d35"
+    },
+    {
+      "path": "research/hybrid-prototype/mcp-srt-config.json",
+      "tokens": 111,
+      "size_bytes": 359,
+      "hash": "18da1fd71e7c"
+    },
+    {
+      "path": "research/hybrid-prototype/test_hybrid.sh",
+      "tokens": 975,
+      "size_bytes": 3093,
+      "hash": "4e726a3eced1"
+    },
+    {
+      "path": "research/knowledge-spike/corpus/dill-cheat-sheet.md",
+      "tokens": 516,
+      "size_bytes": 2154,
+      "hash": "3ac7aa3551d9"
+    },
+    {
+      "path": "research/knowledge-spike/corpus/docker-py-cheat-sheet.md",
+      "tokens": 594,
+      "size_bytes": 2271,
+      "hash": "0cc69d25eaa9"
+    },
+    {
+      "path": "research/knowledge-spike/corpus/docker-sandbox-spec.md",
+      "tokens": 1006,
+      "size_bytes": 3816,
+      "hash": "35dd23f9242a"
+    },
+    {
+      "path": "research/knowledge-spike/corpus/dspy-cheat-sheet.md",
+      "tokens": 636,
+      "size_bytes": 2531,
+      "hash": "f72d25fdb0ab"
+    },
+    {
+      "path": "research/knowledge-spike/corpus/dspy-integration-spec.md",
+      "tokens": 931,
+      "size_bytes": 3757,
+      "hash": "383dd7738b27"
+    },
+    {
+      "path": "research/knowledge-spike/corpus/faiss-cpu-cheat-sheet.md",
+      "tokens": 883,
+      "size_bytes": 3067,
+      "hash": "8a327be2efc7"
+    },
+    {
+      "path": "research/knowledge-spike/corpus/fastapi-cheat-sheet.md",
+      "tokens": 269,
+      "size_bytes": 964,
+      "hash": "68b0655b4bbb"
+    },
+    {
+      "path": "research/knowledge-spike/corpus/findings.md",
+      "tokens": 2667,
+      "size_bytes": 11019,
+      "hash": "18dfbbf010fd"
+    },
+    {
+      "path": "research/knowledge-spike/corpus/ipython-cheat-sheet.md",
+      "tokens": 366,
+      "size_bytes": 1588,
+      "hash": "0d0cab2708a9"
+    },
+    {
+      "path": "research/knowledge-spike/corpus/manifest.md",
+      "tokens": 730,
+      "size_bytes": 2513,
+      "hash": "bfa82ab41bea"
+    },
+    {
+      "path": "research/knowledge-spike/corpus/mcp-python-sdk-cheat-sheet.md",
+      "tokens": 592,
+      "size_bytes": 2285,
+      "hash": "4add4fae5f1b"
+    },
+    {
+      "path": "research/knowledge-spike/corpus/mcp-server-spec.md",
+      "tokens": 1396,
+      "size_bytes": 5485,
+      "hash": "ea9bf681250d"
+    },
+    {
+      "path": "research/knowledge-spike/corpus/memvid-sdk-cheat-sheet.md",
+      "tokens": 629,
+      "size_bytes": 2195,
+      "hash": "77cc4017bdd5"
+    },
+    {
+      "path": "research/knowledge-spike/corpus/README.md",
+      "tokens": 1168,
+      "size_bytes": 4873,
+      "hash": "5d1f85766bef"
+    },
+    {
+      "path": "research/knowledge-spike/corpus/session-persistence-spec.md",
+      "tokens": 812,
+      "size_bytes": 3463,
+      "hash": "e2dc1945a4fb"
+    },
+    {
+      "path": "research/knowledge-spike/benchmark_results.md",
+      "tokens": 520,
+      "size_bytes": 1798,
+      "hash": "27f82bc2e28f"
+    },
+    {
+      "path": "research/knowledge-spike/faiss_proto.py",
+      "tokens": 3798,
+      "size_bytes": 15030,
+      "hash": "8297663e9934"
+    },
+    {
+      "path": "research/knowledge-spike/faiss_results.md",
+      "tokens": 2152,
+      "size_bytes": 7098,
+      "hash": "a6897fffc885"
+    },
+    {
+      "path": "research/knowledge-spike/host_vs_container.md",
+      "tokens": 507,
+      "size_bytes": 2167,
+      "hash": "a638be654ca1"
+    },
+    {
+      "path": "research/knowledge-spike/memvid_proto.py",
+      "tokens": 3081,
+      "size_bytes": 11450,
+      "hash": "0feb03c0b8c0"
+    },
+    {
+      "path": "research/knowledge-spike/memvid_results.md",
+      "tokens": 1070,
+      "size_bytes": 3723,
+      "hash": "2d4d49d9b3cc"
+    },
+    {
+      "path": "research/knowledge-spike/memvid_smoke_test.py",
+      "tokens": 1298,
+      "size_bytes": 4959,
+      "hash": "d0345482a5d8"
+    },
+    {
+      "path": "research/knowledge-spike/memvid_smoke_test_v2.py",
+      "tokens": 1498,
+      "size_bytes": 5994,
+      "hash": "3abb7419f4e2"
+    },
+    {
+      "path": "research/knowledge-spike/memvid_smoke_test_v3.py",
+      "tokens": 2290,
+      "size_bytes": 9031,
+      "hash": "7f5845c09296"
+    },
+    {
+      "path": "research/srt-prototype/workspace/test.txt",
+      "tokens": 1,
+      "size_bytes": 5,
+      "hash": "2cf24dba5fb0"
+    },
+    {
+      "path": "research/srt-prototype/kernel.py",
+      "tokens": 864,
+      "size_bytes": 3551,
+      "hash": "87dabfe45e3f"
+    },
+    {
+      "path": "research/srt-prototype/srt-config.json",
+      "tokens": 114,
+      "size_bytes": 378,
+      "hash": "9424f66a0da0"
+    },
+    {
+      "path": "research/srt-prototype/test_kernel.sh",
+      "tokens": 953,
+      "size_bytes": 3086,
+      "hash": "a81f3a3f3605"
+    },
+    {
+      "path": "research/comparison.md",
+      "tokens": 1152,
+      "size_bytes": 4508,
+      "hash": "543521cd0886"
+    },
+    {
+      "path": "research/srt-test-config.json",
+      "tokens": 72,
+      "size_bytes": 231,
+      "hash": "946257237991"
+    },
+    {
+      "path": "research/test-write.txt",
+      "tokens": 1,
+      "size_bytes": 7,
+      "hash": "eabc01f12ec3"
+    },
+    {
+      "path": "sandbox/__init__.py",
+      "tokens": 0,
+      "size_bytes": 0,
+      "hash": "e3b0c44298fc"
+    },
+    {
+      "path": "sandbox/repl.py",
+      "tokens": 687,
+      "size_bytes": 3224,
+      "hash": "fbaa8efe9fab"
+    },
+    {
+      "path": "sandbox/requirements.txt",
+      "tokens": 48,
+      "size_bytes": 92,
+      "hash": "aabc79096e84"
+    },
+    {
+      "path": "sandbox/server.py",
+      "tokens": 634,
+      "size_bytes": 2679,
+      "hash": "fa83b2a8fc72"
+    },
+    {
+      "path": "scripts/context7-to-mv2.sh",
+      "tokens": 351,
+      "size_bytes": 1276,
+      "hash": "7c4ad03b4370"
+    },
+    {
+      "path": "scripts/setup.sh",
+      "tokens": 555,
+      "size_bytes": 1942,
+      "hash": "2b9d96c2d26a"
+    },
+    {
+      "path": "scripts/start-server.sh",
+      "tokens": 117,
+      "size_bytes": 391,
+      "hash": "6c1cec9266d8"
+    },
+    {
+      "path": "skills/knowledge-status/SKILL.md",
+      "tokens": 2308,
+      "size_bytes": 9721,
+      "hash": "aa541c98a32c"
+    },
+    {
+      "path": "skills/research/SKILL.md",
+      "tokens": 2410,
+      "size_bytes": 10127,
+      "hash": "cf60310fc36e"
+    },
+    {
+      "path": "tests/__init__.py",
+      "tokens": 0,
+      "size_bytes": 0,
+      "hash": "e3b0c44298fc"
+    },
+    {
+      "path": "tests/e2e_validate.py",
+      "tokens": 1967,
+      "size_bytes": 8558,
+      "hash": "cb990f2ec024"
+    },
+    {
+      "path": "tests/test_apple_docs.py",
+      "tokens": 1793,
+      "size_bytes": 8223,
+      "hash": "bb7698ff202d"
+    },
+    {
+      "path": "tests/test_fetcher.py",
+      "tokens": 4740,
+      "size_bytes": 22049,
+      "hash": "115ce54e3a12"
+    },
+    {
+      "path": "tests/test_integration.py",
+      "tokens": 1129,
+      "size_bytes": 5023,
+      "hash": "c79eb5dcf9ee"
+    },
+    {
+      "path": "tests/test_knowledge.py",
+      "tokens": 5936,
+      "size_bytes": 25626,
+      "hash": "ae25625479a6"
+    },
+    {
+      "path": "tests/test_llm_callback.py",
+      "tokens": 1359,
+      "size_bytes": 5890,
+      "hash": "a9b61394969d"
+    },
+    {
+      "path": "tests/test_mcp_server.py",
+      "tokens": 1072,
+      "size_bytes": 4345,
+      "hash": "09b1398a5052"
+    },
+    {
+      "path": "tests/test_persistence.py",
+      "tokens": 1538,
+      "size_bytes": 6047,
+      "hash": "509700a2ee86"
+    },
+    {
+      "path": "tests/test_research.py",
+      "tokens": 4711,
+      "size_bytes": 21269,
+      "hash": "05c792e8c1d7"
+    },
+    {
+      "path": "tests/test_sandbox.py",
+      "tokens": 1238,
+      "size_bytes": 5285,
+      "hash": "59184208eefc"
+    },
+    {
+      "path": "tests/test_sub_agent.py",
+      "tokens": 3509,
+      "size_bytes": 15772,
+      "hash": "3e3fc0b3cb9d"
+    },
+    {
+      "path": "workspace/.gitkeep",
+      "tokens": 0,
+      "size_bytes": 0,
+      "hash": "e3b0c44298fc"
+    },
+    {
+      "path": ".gitignore",
+      "tokens": 17,
+      "size_bytes": 41,
+      "hash": "dab61fe5cd86"
+    },
+    {
+      "path": ".mcp.json",
+      "tokens": 76,
+      "size_bytes": 250,
+      "hash": "2353e0fdb196"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "tokens": 297,
+      "size_bytes": 1064,
+      "hash": "1c2db1ea285b"
+    },
+    {
+      "path": "CLAUDE.md",
+      "tokens": 411,
+      "size_bytes": 1643,
+      "hash": "f6656abfbbab"
+    },
+    {
+      "path": "docker-compose.yml",
+      "tokens": 136,
+      "size_bytes": 444,
+      "hash": "58466b2e6028"
+    },
+    {
+      "path": "Dockerfile",
+      "tokens": 100,
+      "size_bytes": 337,
+      "hash": "c9fcf8892b16"
+    },
+    {
+      "path": "LICENSE",
+      "tokens": 219,
+      "size_bytes": 1069,
+      "hash": "ae713bde0718"
+    },
+    {
+      "path": "pyproject.toml",
+      "tokens": 64,
+      "size_bytes": 226,
+      "hash": "71c4b1db57ac"
+    },
+    {
+      "path": "README.md",
+      "tokens": 2442,
+      "size_bytes": 8934,
+      "hash": "6366d19d1060"
+    },
+    {
+      "path": "SIMPLIFICATION_LOG.md",
+      "tokens": 1078,
+      "size_bytes": 4297,
+      "hash": "61c6e504c371"
+    }
+  ],
+  "directories": [
+    ".claude",
+    ".claude/cache",
+    ".claude-plugin",
+    "agents",
+    "claude-integration",
+    "docs",
+    "docs/plans",
+    "docs/plans/specs",
+    "hooks",
+    "mcp_server",
+    "research",
+    "research/hybrid-prototype",
+    "research/knowledge-spike",
+    "research/knowledge-spike/corpus",
+    "research/srt-prototype",
+    "research/srt-prototype/workspace",
+    "sandbox",
+    "scripts",
+    "skills",
+    "skills/knowledge-status",
+    "skills/research",
+    "tests",
+    "workspace"
+  ],
+  "total_tokens": 133012,
+  "total_files": 106,
+  "skipped": [],
+  "merkle": {
+    "root_hash": "0d34621b46f6",
+    "tree": {
+      ".claude/cache/context-forward.md": {
+        "hash": "ccbcc5f619e7",
+        "tokens": 375,
+        "type": "file"
+      },
+      ".claude/cache": {
+        "hash": "6ca558cf5c8b",
+        "children": [
+          ".claude/cache/context-forward.md"
+        ],
+        "type": "dir"
+      },
+      ".claude": {
+        "hash": "88a39fb2153b",
+        "children": [
+          ".claude/cache"
+        ],
+        "type": "dir"
+      },
+      ".claude-plugin/plugin.json": {
+        "hash": "9bfb6549b326",
+        "tokens": 263,
+        "type": "file"
+      },
+      ".claude-plugin": {
+        "hash": "3ef9fd2dafef",
+        "children": [
+          ".claude-plugin/plugin.json"
+        ],
+        "type": "dir"
+      },
+      "agents/rlm-researcher.md": {
+        "hash": "26114268d90a",
+        "tokens": 845,
+        "type": "file"
+      },
+      "agents/rlm-sandbox.md": {
+        "hash": "3f0de2f286af",
+        "tokens": 790,
+        "type": "file"
+      },
+      "agents": {
+        "hash": "ba3892d8cd21",
+        "children": [
+          "agents/rlm-researcher.md",
+          "agents/rlm-sandbox.md"
+        ],
+        "type": "dir"
+      },
+      "claude-integration/mcp-config.json": {
+        "hash": "f23f12d04a18",
+        "tokens": 48,
+        "type": "file"
+      },
+      "claude-integration/rlm-routing-rules.md": {
+        "hash": "1dd52132c656",
+        "tokens": 991,
+        "type": "file"
+      },
+      "claude-integration/setup.sh": {
+        "hash": "3fd8106d5c15",
+        "tokens": 980,
+        "type": "file"
+      },
+      "claude-integration": {
+        "hash": "305180ed7665",
+        "children": [
+          "claude-integration/mcp-config.json",
+          "claude-integration/rlm-routing-rules.md",
+          "claude-integration/setup.sh"
+        ],
+        "type": "dir"
+      },
+      "docs/plans/specs/claude-integration-spec.md": {
+        "hash": "5b259206ec6a",
+        "tokens": 867,
+        "type": "file"
+      },
+      "docs/plans/specs/doc-fetcher-spec.md": {
+        "hash": "5840341da97c",
+        "tokens": 1352,
+        "type": "file"
+      },
+      "docs/plans/specs/docker-sandbox-spec.md": {
+        "hash": "35dd23f9242a",
+        "tokens": 1006,
+        "type": "file"
+      },
+      "docs/plans/specs/dspy-integration-spec.md": {
+        "hash": "383dd7738b27",
+        "tokens": 931,
+        "type": "file"
+      },
+      "docs/plans/specs/mcp-server-spec.md": {
+        "hash": "ea9bf681250d",
+        "tokens": 1396,
+        "type": "file"
+      },
+      "docs/plans/specs/orchestrator-integration-spec.md": {
+        "hash": "02dec84b7ff0",
+        "tokens": 1337,
+        "type": "file"
+      },
+      "docs/plans/specs/sandbox-research-spec.md": {
+        "hash": "784336f7132d",
+        "tokens": 1067,
+        "type": "file"
+      },
+      "docs/plans/specs/search-engine-spec.md": {
+        "hash": "dcc7974d1bb9",
+        "tokens": 1636,
+        "type": "file"
+      },
+      "docs/plans/specs/search-spike-spec.md": {
+        "hash": "289434adc945",
+        "tokens": 709,
+        "type": "file"
+      },
+      "docs/plans/specs/session-persistence-spec.md": {
+        "hash": "e2dc1945a4fb",
+        "tokens": 812,
+        "type": "file"
+      },
+      "docs/plans/specs": {
+        "hash": "ec870ff13724",
+        "children": [
+          "docs/plans/specs/claude-integration-spec.md",
+          "docs/plans/specs/doc-fetcher-spec.md",
+          "docs/plans/specs/docker-sandbox-spec.md",
+          "docs/plans/specs/dspy-integration-spec.md",
+          "docs/plans/specs/mcp-server-spec.md",
+          "docs/plans/specs/orchestrator-integration-spec.md",
+          "docs/plans/specs/sandbox-research-spec.md",
+          "docs/plans/specs/search-engine-spec.md",
+          "docs/plans/specs/search-spike-spec.md",
+          "docs/plans/specs/session-persistence-spec.md"
+        ],
+        "type": "dir"
+      },
+      "docs/plans/context-forward.md": {
+        "hash": "ccbcc5f619e7",
+        "tokens": 375,
+        "type": "file"
+      },
+      "docs/plans/findings.md": {
+        "hash": "056493e21fcb",
+        "tokens": 3507,
+        "type": "file"
+      },
+      "docs/plans/manifest.md": {
+        "hash": "4ddfc650f63c",
+        "tokens": 855,
+        "type": "file"
+      },
+      "docs/plans/progress.md": {
+        "hash": "0bbffe14780d",
+        "tokens": 3284,
+        "type": "file"
+      },
+      "docs/plans": {
+        "hash": "8e65ad6fab82",
+        "children": [
+          "docs/plans/specs",
+          "docs/plans/context-forward.md",
+          "docs/plans/findings.md",
+          "docs/plans/manifest.md",
+          "docs/plans/progress.md"
+        ],
+        "type": "dir"
+      },
+      "docs/.mercator.json": {
+        "hash": "8050b5a8f6ad",
+        "tokens": 11708,
+        "type": "file"
+      },
+      "docs/.mercator.json.tmp": {
+        "hash": "e3b0c44298fc",
+        "tokens": 0,
+        "type": "file"
+      },
+      "docs/CODEBASE_MAP.md": {
+        "hash": "0fdcf83cf6bd",
+        "tokens": 2845,
+        "type": "file"
+      },
+      "docs": {
+        "hash": "99f38d52e3a0",
+        "children": [
+          "docs/plans",
+          "docs/.mercator.json",
+          "docs/.mercator.json.tmp",
+          "docs/CODEBASE_MAP.md"
+        ],
+        "type": "dir"
+      },
+      "hooks/hooks.json": {
+        "hash": "1eedfd8197ab",
+        "tokens": 101,
+        "type": "file"
+      },
+      "hooks": {
+        "hash": "dd8e1ddc1067",
+        "children": [
+          "hooks/hooks.json"
+        ],
+        "type": "dir"
+      },
+      "mcp_server/__init__.py": {
+        "hash": "e3b0c44298fc",
+        "tokens": 0,
+        "type": "file"
+      },
+      "mcp_server/apple_docs.py": {
+        "hash": "60695d4065bc",
+        "tokens": 3311,
+        "type": "file"
+      },
+      "mcp_server/docker_manager.py": {
+        "hash": "22258ae9df80",
+        "tokens": 1474,
+        "type": "file"
+      },
+      "mcp_server/fetcher.py": {
+        "hash": "c030f5fc7c4b",
+        "tokens": 3555,
+        "type": "file"
+      },
+      "mcp_server/knowledge.py": {
+        "hash": "1bb609489b7a",
+        "tokens": 2641,
+        "type": "file"
+      },
+      "mcp_server/llm_callback.py": {
+        "hash": "78a413053f7d",
+        "tokens": 1139,
+        "type": "file"
+      },
+      "mcp_server/requirements.txt": {
+        "hash": "f1d78e92c3c2",
+        "tokens": 37,
+        "type": "file"
+      },
+      "mcp_server/research.py": {
+        "hash": "e69af1664e3b",
+        "tokens": 2237,
+        "type": "file"
+      },
+      "mcp_server/server.py": {
+        "hash": "86700a62b299",
+        "tokens": 630,
+        "type": "file"
+      },
+      "mcp_server/session.py": {
+        "hash": "fbf9bc3be83f",
+        "tokens": 1036,
+        "type": "file"
+      },
+      "mcp_server/signatures.py": {
+        "hash": "35e79393210e",
+        "tokens": 720,
+        "type": "file"
+      },
+      "mcp_server/srt-config.json": {
+        "hash": "2e01bb6a2c20",
+        "tokens": 43,
+        "type": "file"
+      },
+      "mcp_server/sub_agent.py": {
+        "hash": "6616407c7080",
+        "tokens": 1505,
+        "type": "file"
+      },
+      "mcp_server/tools.py": {
+        "hash": "8d3ab920cb72",
+        "tokens": 1297,
+        "type": "file"
+      },
+      "mcp_server": {
+        "hash": "a29f0e94c02e",
+        "children": [
+          "mcp_server/__init__.py",
+          "mcp_server/apple_docs.py",
+          "mcp_server/docker_manager.py",
+          "mcp_server/fetcher.py",
+          "mcp_server/knowledge.py",
+          "mcp_server/llm_callback.py",
+          "mcp_server/requirements.txt",
+          "mcp_server/research.py",
+          "mcp_server/server.py",
+          "mcp_server/session.py",
+          "mcp_server/signatures.py",
+          "mcp_server/srt-config.json",
+          "mcp_server/sub_agent.py",
+          "mcp_server/tools.py"
+        ],
+        "type": "dir"
+      },
+      "research/hybrid-prototype/Dockerfile": {
+        "hash": "02618935f346",
+        "tokens": 37,
+        "type": "file"
+      },
+      "research/hybrid-prototype/kernel.py": {
+        "hash": "ce1441047d35",
+        "tokens": 676,
+        "type": "file"
+      },
+      "research/hybrid-prototype/mcp-srt-config.json": {
+        "hash": "18da1fd71e7c",
+        "tokens": 111,
+        "type": "file"
+      },
+      "research/hybrid-prototype/test_hybrid.sh": {
+        "hash": "4e726a3eced1",
+        "tokens": 975,
+        "type": "file"
+      },
+      "research/hybrid-prototype": {
+        "hash": "db207ece4e71",
+        "children": [
+          "research/hybrid-prototype/Dockerfile",
+          "research/hybrid-prototype/kernel.py",
+          "research/hybrid-prototype/mcp-srt-config.json",
+          "research/hybrid-prototype/test_hybrid.sh"
+        ],
+        "type": "dir"
+      },
+      "research/knowledge-spike/corpus/dill-cheat-sheet.md": {
+        "hash": "3ac7aa3551d9",
+        "tokens": 516,
+        "type": "file"
+      },
+      "research/knowledge-spike/corpus/docker-py-cheat-sheet.md": {
+        "hash": "0cc69d25eaa9",
+        "tokens": 594,
+        "type": "file"
+      },
+      "research/knowledge-spike/corpus/docker-sandbox-spec.md": {
+        "hash": "35dd23f9242a",
+        "tokens": 1006,
+        "type": "file"
+      },
+      "research/knowledge-spike/corpus/dspy-cheat-sheet.md": {
+        "hash": "f72d25fdb0ab",
+        "tokens": 636,
+        "type": "file"
+      },
+      "research/knowledge-spike/corpus/dspy-integration-spec.md": {
+        "hash": "383dd7738b27",
+        "tokens": 931,
+        "type": "file"
+      },
+      "research/knowledge-spike/corpus/faiss-cpu-cheat-sheet.md": {
+        "hash": "8a327be2efc7",
+        "tokens": 883,
+        "type": "file"
+      },
+      "research/knowledge-spike/corpus/fastapi-cheat-sheet.md": {
+        "hash": "68b0655b4bbb",
+        "tokens": 269,
+        "type": "file"
+      },
+      "research/knowledge-spike/corpus/findings.md": {
+        "hash": "18dfbbf010fd",
+        "tokens": 2667,
+        "type": "file"
+      },
+      "research/knowledge-spike/corpus/ipython-cheat-sheet.md": {
+        "hash": "0d0cab2708a9",
+        "tokens": 366,
+        "type": "file"
+      },
+      "research/knowledge-spike/corpus/manifest.md": {
+        "hash": "bfa82ab41bea",
+        "tokens": 730,
+        "type": "file"
+      },
+      "research/knowledge-spike/corpus/mcp-python-sdk-cheat-sheet.md": {
+        "hash": "4add4fae5f1b",
+        "tokens": 592,
+        "type": "file"
+      },
+      "research/knowledge-spike/corpus/mcp-server-spec.md": {
+        "hash": "ea9bf681250d",
+        "tokens": 1396,
+        "type": "file"
+      },
+      "research/knowledge-spike/corpus/memvid-sdk-cheat-sheet.md": {
+        "hash": "77cc4017bdd5",
+        "tokens": 629,
+        "type": "file"
+      },
+      "research/knowledge-spike/corpus/README.md": {
+        "hash": "5d1f85766bef",
+        "tokens": 1168,
+        "type": "file"
+      },
+      "research/knowledge-spike/corpus/session-persistence-spec.md": {
+        "hash": "e2dc1945a4fb",
+        "tokens": 812,
+        "type": "file"
+      },
+      "research/knowledge-spike/corpus": {
+        "hash": "b508b040fa5a",
+        "children": [
+          "research/knowledge-spike/corpus/dill-cheat-sheet.md",
+          "research/knowledge-spike/corpus/docker-py-cheat-sheet.md",
+          "research/knowledge-spike/corpus/docker-sandbox-spec.md",
+          "research/knowledge-spike/corpus/dspy-cheat-sheet.md",
+          "research/knowledge-spike/corpus/dspy-integration-spec.md",
+          "research/knowledge-spike/corpus/faiss-cpu-cheat-sheet.md",
+          "research/knowledge-spike/corpus/fastapi-cheat-sheet.md",
+          "research/knowledge-spike/corpus/findings.md",
+          "research/knowledge-spike/corpus/ipython-cheat-sheet.md",
+          "research/knowledge-spike/corpus/manifest.md",
+          "research/knowledge-spike/corpus/mcp-python-sdk-cheat-sheet.md",
+          "research/knowledge-spike/corpus/mcp-server-spec.md",
+          "research/knowledge-spike/corpus/memvid-sdk-cheat-sheet.md",
+          "research/knowledge-spike/corpus/README.md",
+          "research/knowledge-spike/corpus/session-persistence-spec.md"
+        ],
+        "type": "dir"
+      },
+      "research/knowledge-spike/benchmark_results.md": {
+        "hash": "27f82bc2e28f",
+        "tokens": 520,
+        "type": "file"
+      },
+      "research/knowledge-spike/faiss_proto.py": {
+        "hash": "8297663e9934",
+        "tokens": 3798,
+        "type": "file"
+      },
+      "research/knowledge-spike/faiss_results.md": {
+        "hash": "a6897fffc885",
+        "tokens": 2152,
+        "type": "file"
+      },
+      "research/knowledge-spike/host_vs_container.md": {
+        "hash": "a638be654ca1",
+        "tokens": 507,
+        "type": "file"
+      },
+      "research/knowledge-spike/memvid_proto.py": {
+        "hash": "0feb03c0b8c0",
+        "tokens": 3081,
+        "type": "file"
+      },
+      "research/knowledge-spike/memvid_results.md": {
+        "hash": "2d4d49d9b3cc",
+        "tokens": 1070,
+        "type": "file"
+      },
+      "research/knowledge-spike/memvid_smoke_test.py": {
+        "hash": "d0345482a5d8",
+        "tokens": 1298,
+        "type": "file"
+      },
+      "research/knowledge-spike/memvid_smoke_test_v2.py": {
+        "hash": "3abb7419f4e2",
+        "tokens": 1498,
+        "type": "file"
+      },
+      "research/knowledge-spike/memvid_smoke_test_v3.py": {
+        "hash": "7f5845c09296",
+        "tokens": 2290,
+        "type": "file"
+      },
+      "research/knowledge-spike": {
+        "hash": "2ea15765f404",
+        "children": [
+          "research/knowledge-spike/corpus",
+          "research/knowledge-spike/benchmark_results.md",
+          "research/knowledge-spike/faiss_proto.py",
+          "research/knowledge-spike/faiss_results.md",
+          "research/knowledge-spike/host_vs_container.md",
+          "research/knowledge-spike/memvid_proto.py",
+          "research/knowledge-spike/memvid_results.md",
+          "research/knowledge-spike/memvid_smoke_test.py",
+          "research/knowledge-spike/memvid_smoke_test_v2.py",
+          "research/knowledge-spike/memvid_smoke_test_v3.py"
+        ],
+        "type": "dir"
+      },
+      "research/srt-prototype/workspace/test.txt": {
+        "hash": "2cf24dba5fb0",
+        "tokens": 1,
+        "type": "file"
+      },
+      "research/srt-prototype/workspace": {
+        "hash": "a8209ad844b4",
+        "children": [
+          "research/srt-prototype/workspace/test.txt"
+        ],
+        "type": "dir"
+      },
+      "research/srt-prototype/kernel.py": {
+        "hash": "87dabfe45e3f",
+        "tokens": 864,
+        "type": "file"
+      },
+      "research/srt-prototype/srt-config.json": {
+        "hash": "9424f66a0da0",
+        "tokens": 114,
+        "type": "file"
+      },
+      "research/srt-prototype/test_kernel.sh": {
+        "hash": "a81f3a3f3605",
+        "tokens": 953,
+        "type": "file"
+      },
+      "research/srt-prototype": {
+        "hash": "266685b16e6b",
+        "children": [
+          "research/srt-prototype/workspace",
+          "research/srt-prototype/kernel.py",
+          "research/srt-prototype/srt-config.json",
+          "research/srt-prototype/test_kernel.sh"
+        ],
+        "type": "dir"
+      },
+      "research/comparison.md": {
+        "hash": "543521cd0886",
+        "tokens": 1152,
+        "type": "file"
+      },
+      "research/srt-test-config.json": {
+        "hash": "946257237991",
+        "tokens": 72,
+        "type": "file"
+      },
+      "research/test-write.txt": {
+        "hash": "eabc01f12ec3",
+        "tokens": 1,
+        "type": "file"
+      },
+      "research": {
+        "hash": "c649d6d38c40",
+        "children": [
+          "research/hybrid-prototype",
+          "research/knowledge-spike",
+          "research/srt-prototype",
+          "research/comparison.md",
+          "research/srt-test-config.json",
+          "research/test-write.txt"
+        ],
+        "type": "dir"
+      },
+      "sandbox/__init__.py": {
+        "hash": "e3b0c44298fc",
+        "tokens": 0,
+        "type": "file"
+      },
+      "sandbox/repl.py": {
+        "hash": "fbaa8efe9fab",
+        "tokens": 687,
+        "type": "file"
+      },
+      "sandbox/requirements.txt": {
+        "hash": "aabc79096e84",
+        "tokens": 48,
+        "type": "file"
+      },
+      "sandbox/server.py": {
+        "hash": "fa83b2a8fc72",
+        "tokens": 634,
+        "type": "file"
+      },
+      "sandbox": {
+        "hash": "dfa027ff695e",
+        "children": [
+          "sandbox/__init__.py",
+          "sandbox/repl.py",
+          "sandbox/requirements.txt",
+          "sandbox/server.py"
+        ],
+        "type": "dir"
+      },
+      "scripts/context7-to-mv2.sh": {
+        "hash": "7c4ad03b4370",
+        "tokens": 351,
+        "type": "file"
+      },
+      "scripts/setup.sh": {
+        "hash": "2b9d96c2d26a",
+        "tokens": 555,
+        "type": "file"
+      },
+      "scripts/start-server.sh": {
+        "hash": "6c1cec9266d8",
+        "tokens": 117,
+        "type": "file"
+      },
+      "scripts": {
+        "hash": "97ef784bbe6c",
+        "children": [
+          "scripts/context7-to-mv2.sh",
+          "scripts/setup.sh",
+          "scripts/start-server.sh"
+        ],
+        "type": "dir"
+      },
+      "skills/knowledge-status/SKILL.md": {
+        "hash": "aa541c98a32c",
+        "tokens": 2308,
+        "type": "file"
+      },
+      "skills/knowledge-status": {
+        "hash": "91bbbe5b2eff",
+        "children": [
+          "skills/knowledge-status/SKILL.md"
+        ],
+        "type": "dir"
+      },
+      "skills/research/SKILL.md": {
+        "hash": "cf60310fc36e",
+        "tokens": 2410,
+        "type": "file"
+      },
+      "skills/research": {
+        "hash": "b3e8c4e1bba7",
+        "children": [
+          "skills/research/SKILL.md"
+        ],
+        "type": "dir"
+      },
+      "skills": {
+        "hash": "0ab0c45b1f97",
+        "children": [
+          "skills/knowledge-status",
+          "skills/research"
+        ],
+        "type": "dir"
+      },
+      "tests/__init__.py": {
+        "hash": "e3b0c44298fc",
+        "tokens": 0,
+        "type": "file"
+      },
+      "tests/e2e_validate.py": {
+        "hash": "cb990f2ec024",
+        "tokens": 1967,
+        "type": "file"
+      },
+      "tests/test_apple_docs.py": {
+        "hash": "bb7698ff202d",
+        "tokens": 1793,
+        "type": "file"
+      },
+      "tests/test_fetcher.py": {
+        "hash": "115ce54e3a12",
+        "tokens": 4740,
+        "type": "file"
+      },
+      "tests/test_integration.py": {
+        "hash": "c79eb5dcf9ee",
+        "tokens": 1129,
+        "type": "file"
+      },
+      "tests/test_knowledge.py": {
+        "hash": "ae25625479a6",
+        "tokens": 5936,
+        "type": "file"
+      },
+      "tests/test_llm_callback.py": {
+        "hash": "a9b61394969d",
+        "tokens": 1359,
+        "type": "file"
+      },
+      "tests/test_mcp_server.py": {
+        "hash": "09b1398a5052",
+        "tokens": 1072,
+        "type": "file"
+      },
+      "tests/test_persistence.py": {
+        "hash": "509700a2ee86",
+        "tokens": 1538,
+        "type": "file"
+      },
+      "tests/test_research.py": {
+        "hash": "05c792e8c1d7",
+        "tokens": 4711,
+        "type": "file"
+      },
+      "tests/test_sandbox.py": {
+        "hash": "59184208eefc",
+        "tokens": 1238,
+        "type": "file"
+      },
+      "tests/test_sub_agent.py": {
+        "hash": "3e3fc0b3cb9d",
+        "tokens": 3509,
+        "type": "file"
+      },
+      "tests": {
+        "hash": "9e4be2323329",
+        "children": [
+          "tests/__init__.py",
+          "tests/e2e_validate.py",
+          "tests/test_apple_docs.py",
+          "tests/test_fetcher.py",
+          "tests/test_integration.py",
+          "tests/test_knowledge.py",
+          "tests/test_llm_callback.py",
+          "tests/test_mcp_server.py",
+          "tests/test_persistence.py",
+          "tests/test_research.py",
+          "tests/test_sandbox.py",
+          "tests/test_sub_agent.py"
+        ],
+        "type": "dir"
+      },
+      "workspace/.gitkeep": {
+        "hash": "e3b0c44298fc",
+        "tokens": 0,
+        "type": "file"
+      },
+      "workspace": {
+        "hash": "4b9f7d802648",
+        "children": [
+          "workspace/.gitkeep"
+        ],
+        "type": "dir"
+      },
+      ".gitignore": {
+        "hash": "dab61fe5cd86",
+        "tokens": 17,
+        "type": "file"
+      },
+      ".mcp.json": {
+        "hash": "2353e0fdb196",
+        "tokens": 76,
+        "type": "file"
+      },
+      "CHANGELOG.md": {
+        "hash": "1c2db1ea285b",
+        "tokens": 297,
+        "type": "file"
+      },
+      "CLAUDE.md": {
+        "hash": "f6656abfbbab",
+        "tokens": 411,
+        "type": "file"
+      },
+      "docker-compose.yml": {
+        "hash": "58466b2e6028",
+        "tokens": 136,
+        "type": "file"
+      },
+      "Dockerfile": {
+        "hash": "c9fcf8892b16",
+        "tokens": 100,
+        "type": "file"
+      },
+      "LICENSE": {
+        "hash": "ae713bde0718",
+        "tokens": 219,
+        "type": "file"
+      },
+      "pyproject.toml": {
+        "hash": "71c4b1db57ac",
+        "tokens": 64,
+        "type": "file"
+      },
+      "README.md": {
+        "hash": "6366d19d1060",
+        "tokens": 2442,
+        "type": "file"
+      },
+      "SIMPLIFICATION_LOG.md": {
+        "hash": "61c6e504c371",
+        "tokens": 1078,
+        "type": "file"
+      },
+      "/": {
+        "hash": "0d34621b46f6",
+        "children": [
+          ".claude",
+          ".claude-plugin",
+          "agents",
+          "claude-integration",
+          "docs",
+          "hooks",
+          "mcp_server",
+          "research",
+          "sandbox",
+          "scripts",
+          "skills",
+          "tests",
+          "workspace",
+          ".gitignore",
+          ".mcp.json",
+          "CHANGELOG.md",
+          "CLAUDE.md",
+          "docker-compose.yml",
+          "Dockerfile",
+          "LICENSE",
+          "pyproject.toml",
+          "README.md",
+          "SIMPLIFICATION_LOG.md"
+        ],
+        "type": "dir"
+      }
+    }
+  }
+}

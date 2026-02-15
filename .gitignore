@@ -2,3 +2,7 @@ __pycache__/
 .venv/
 .pytest_cache/
 *.mv2
+.DS_Store
+.claude/cache/
+docs/plans/context-forward.md
+SIMPLIFICATION_LOG.md
