@@ -70,7 +70,9 @@ class DockerManager:
             raise RuntimeError(f"Failed to build sandbox image: {e.stderr}") from e
 
         # Use bridge networking with null DNS (matches docker-compose.yml)
-        # instead of network_mode="none" which blocks port mapping entirely
+        # instead of network_mode="none" which blocks port mapping entirely.
+        # extra_hosts maps host.docker.internal via /etc/hosts (bypasses null DNS)
+        # so the llm_query callback can reach the host.
         self.container = client.containers.run(
             image=IMAGE_NAME,
             name=CONTAINER_NAME,
@@ -79,6 +81,7 @@ class DockerManager:
             mem_limit="2g",
             cpu_quota=200000,
             dns=["0.0.0.0"],
+            extra_hosts={"host.docker.internal": "host-gateway"},
             healthcheck={
                 "test": ["CMD-SHELL", f"curl -f http://localhost:{CONTAINER_PORT}/health || exit 1"],
                 "interval": 30_000_000_000,
@@ -103,8 +106,8 @@ class DockerManager:
     async def _wait_healthy(self, timeout: float = 15) -> None:
         """Poll /health until the server responds."""
         async with httpx.AsyncClient() as client:
-            deadline = asyncio.get_event_loop().time() + timeout
-            while asyncio.get_event_loop().time() < deadline:
+            deadline = asyncio.get_running_loop().time() + timeout
+            while asyncio.get_running_loop().time() < deadline:
                 try:
                     r = await client.get(f"{BASE_URL}/health", timeout=2)
                     if r.status_code == 200:

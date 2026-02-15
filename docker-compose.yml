@@ -3,6 +3,8 @@ services:
     build: .
     dns:
       - "0.0.0.0"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     deploy:
       resources:
         limits:
