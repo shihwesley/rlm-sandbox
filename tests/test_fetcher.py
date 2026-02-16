@@ -44,11 +44,12 @@ def _run(coro):
     return asyncio.run(coro)
 
 
-def _mock_response(text: str = "", status_code: int = 200) -> MagicMock:
+def _mock_response(text: str = "", status_code: int = 200, headers: dict | None = None) -> MagicMock:
     """Create a mock httpx response."""
     resp = MagicMock()
     resp.status_code = status_code
     resp.text = text
+    resp.headers = headers or {}
     resp.raise_for_status = MagicMock()
     if status_code >= 400:
         import httpx
@@ -315,15 +316,10 @@ class TestFetchUrl:
         write_meta(doc_path, url, "# Old content")
 
         client = AsyncMock()
-        # .md variant fails
-        md_resp = _mock_response("<!DOCTYPE html>", 200)
-        # Original URL returns new content
-        orig_resp = _mock_response("# New content", 200)
+        new_resp = _mock_response("# New content", 200)
 
         async def fake_get(u, **kwargs):
-            if u.endswith(".md"):
-                return md_resp
-            return orig_resp
+            return new_resp
 
         client.get = fake_get
 
@@ -331,51 +327,14 @@ class TestFetchUrl:
         assert result["from_cache"] is False
         assert result["content"] == "# New content"
 
-    def test_md_variant_preferred(self):
-        """When .md variant returns real markdown, use it."""
-        url = "https://docs.example.com/guide"
-        client = AsyncMock()
-
-        md_content = "# Guide\n\nThis is markdown."
-        md_resp = _mock_response(md_content, 200)
-        client.get = AsyncMock(return_value=md_resp)
-
-        result = _run(fetch_url(client, url, force=True))
-        assert result["error"] is None
-        assert result["content"] == md_content
-
-    def test_md_variant_html_falls_back(self):
-        """If .md variant returns HTML, fall back to original URL."""
-        url = "https://docs.example.com/api"
-        client = AsyncMock()
-
-        call_count = 0
-
-        async def fake_get(u, **kwargs):
-            nonlocal call_count
-            call_count += 1
-            if u.endswith(".md"):
-                return _mock_response("<!DOCTYPE html><html><body>html</body></html>", 200)
-            return _mock_response("# Real Markdown", 200)
-
-        client.get = fake_get
-
-        result = _run(fetch_url(client, url, force=True))
-        assert result["error"] is None
-        assert "Real Markdown" in result["content"]
-        assert call_count == 2  # tried .md, then original
-
     def test_html_converted_to_markdown(self):
-        """HTML content from the original URL gets converted."""
+        """HTML content gets converted via html2text fallback."""
         url = "https://docs.example.com/page"
         client = AsyncMock()
 
         html = "<html><body><h1>Title</h1><p>Body text</p></body></html>"
 
         async def fake_get(u, **kwargs):
-            if u.endswith(".md"):
-                # .md variant also returns HTML
-                return _mock_response(html, 200)
             return _mock_response(html, 200)
 
         client.get = fake_get
@@ -385,7 +344,7 @@ class TestFetchUrl:
         assert "Title" in result["content"]
 
     def test_timeout_error(self):
-        """Timeout returns clear error, one attempt only."""
+        """Timeout across all tiers returns clear error."""
         import httpx as _httpx
 
         url = "https://docs.example.com/slow"
@@ -397,14 +356,11 @@ class TestFetchUrl:
         assert "Timeout" in result["error"]
 
     def test_http_403_error(self):
-        """403 returns clear error."""
+        """403 on all tiers returns clear error."""
         url = "https://docs.example.com/forbidden"
         client = AsyncMock()
 
         async def fake_get(u, **kwargs):
-            if u.endswith(".md"):
-                import httpx as _httpx
-                raise _httpx.HTTPError("not found")
             return _mock_response("Forbidden", 403)
 
         client.get = fake_get
@@ -414,7 +370,7 @@ class TestFetchUrl:
         assert "403" in result["error"]
 
     def test_connection_error(self):
-        """Connection refused returns clear error."""
+        """Connection refused across all tiers returns clear error."""
         import httpx as _httpx
 
         url = "https://docs.example.com/down"
@@ -444,16 +400,77 @@ class TestFetchUrl:
         assert meta["content_hash"].startswith("sha256:")
         assert meta["size_bytes"] > 0
 
-    def test_url_already_ending_in_md(self):
-        """URL ending in .md shouldn't try .md.md variant."""
-        url = "https://raw.githubusercontent.com/foo/bar/main/README.md"
+    def test_accept_markdown_negotiation(self):
+        """Tier 1: Accept: text/markdown header gets native markdown response."""
+        url = "https://docs.example.com/guide"
         client = AsyncMock()
-        client.get = AsyncMock(return_value=_mock_response("# README", 200))
+
+        md_content = "# Guide\n\nNative markdown from server."
+        resp = _mock_response(md_content, 200)
+        resp.headers = {"content-type": "text/markdown; charset=utf-8", "x-markdown-tokens": "42"}
+
+        async def fake_get(u, **kwargs):
+            headers = kwargs.get("headers", {})
+            if headers.get("Accept") == "text/markdown":
+                return resp
+            return _mock_response("<html>fallback</html>", 200)
+
+        client.get = fake_get
 
         result = _run(fetch_url(client, url, force=True))
         assert result["error"] is None
-        # Should only make one call since URL already ends in .md
-        client.get.assert_called_once()
+        assert result["content"] == md_content
+        assert result["meta"]["markdown_source"] == "negotiated"
+        assert result["meta"]["markdown_tokens"] == 42
+
+    def test_markdown_new_fallback(self):
+        """Tier 2: When Accept: text/markdown returns HTML, try markdown.new proxy."""
+        url = "https://nocloudflare.example.com/page"
+        client = AsyncMock()
+
+        md_from_proxy = "# Page\n\nConverted by markdown.new."
+
+        async def fake_get(u, **kwargs):
+            if "markdown.new" in u:
+                resp = _mock_response(md_from_proxy, 200)
+                resp.headers = {"content-type": "text/markdown", "x-markdown-tokens": "30"}
+                return resp
+            return _mock_response("<!DOCTYPE html><html><body>html</body></html>", 200)
+
+        client.get = fake_get
+
+        result = _run(fetch_url(client, url, force=True))
+        assert result["error"] is None
+        assert result["content"] == md_from_proxy
+        assert result["meta"]["markdown_source"] == "markdown_new"
+
+    def test_html2text_final_fallback(self):
+        """Tier 3: When both negotiation and markdown.new fail, fall back to html2text."""
+        url = "https://oldsite.example.com/page"
+        client = AsyncMock()
+
+        html = "<html><body><h1>Old Site</h1><p>Content here.</p></body></html>"
+
+        async def fake_get(u, **kwargs):
+            if "markdown.new" in u:
+                import httpx as _httpx
+                raise _httpx.ConnectError("markdown.new unreachable")
+            return _mock_response(html, 200)
+
+        client.get = fake_get
+
+        result = _run(fetch_url(client, url, force=True))
+        assert result["error"] is None
+        assert "Old Site" in result["content"]
+        assert result["meta"]["markdown_source"] == "html2text"
+
+    def test_markdown_new_skipped_for_blocked_domains(self):
+        """Don't send blocked-domain URLs to markdown.new either."""
+        url = "https://medium.com/some-article"
+        client = AsyncMock()
+        result = _run(fetch_url(client, url))
+        assert result["error"] is not None
+        assert "Blocked" in result["error"]
 
 
 # ---------------------------------------------------------------------------

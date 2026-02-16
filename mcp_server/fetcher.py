@@ -116,14 +116,19 @@ def read_meta(doc_path: Path) -> dict | None:
         return None
 
 
-def write_meta(doc_path: Path, url: str, content: str) -> dict:
+def write_meta(doc_path: Path, url: str, content: str,
+               markdown_source: str = "html2text",
+               markdown_tokens: int | None = None) -> dict:
     """Write sidecar metadata and return the metadata dict."""
     meta = {
         "url": url,
         "fetched_at": datetime.now(timezone.utc).isoformat(),
         "content_hash": _content_hash(content),
         "size_bytes": len(content.encode()),
+        "markdown_source": markdown_source,
     }
+    if markdown_tokens is not None:
+        meta["markdown_tokens"] = markdown_tokens
     mp = _meta_path(doc_path)
     mp.parent.mkdir(parents=True, exist_ok=True)
     mp.write_text(json.dumps(meta, indent=2))
@@ -216,11 +221,15 @@ async def _ingest_to_store(store: Any, title: str, label: str, text: str, metada
         return False
 
 
-def _store_raw(doc_path: Path, content: str, url: str) -> dict:
+def _store_raw(doc_path: Path, content: str, url: str,
+               markdown_source: str = "html2text",
+               markdown_tokens: int | None = None) -> dict:
     """Write raw markdown file and sidecar metadata. Returns metadata dict."""
     doc_path.parent.mkdir(parents=True, exist_ok=True)
     doc_path.write_text(content)
-    return write_meta(doc_path, url, content)
+    return write_meta(doc_path, url, content,
+                      markdown_source=markdown_source,
+                      markdown_tokens=markdown_tokens)
 
 
 # ---------------------------------------------------------------------------
@@ -234,7 +243,12 @@ async def fetch_url(
     *,
     force: bool = False,
 ) -> dict[str, Any]:
-    """Fetch a single URL with .md variant detection and caching.
+    """Fetch a single URL with markdown negotiation cascade and caching.
+
+    Cascade order:
+      1. Accept: text/markdown content negotiation
+      2. markdown.new proxy
+      3. Original URL + html2text conversion
 
     Returns dict with keys: content, doc_path, meta, from_cache, error
     """
@@ -256,21 +270,52 @@ async def fetch_url(
         return {"content": cached_content, "doc_path": doc_path, "meta": cached_meta,
                 "from_cache": True, "error": None}
 
-    # Try .md variant first (Mintlify/Fumadocs convention)
-    md_url = url.rstrip("/") + ".md" if not url.endswith(".md") else url
+    # --- MARKDOWN NEGOTIATION CASCADE ---
     content = None
     source_url = url
+    markdown_source = "html2text"
+    markdown_tokens = None
 
-    if md_url != url:
+    # Tier 1: Try Accept: text/markdown content negotiation
+    try:
+        resp = await client.get(
+            url, timeout=15, follow_redirects=True,
+            headers={"Accept": "text/markdown"},
+        )
+        resp.raise_for_status()
+        ct = resp.headers.get("content-type", "")
+        if "text/markdown" in ct:
+            content = resp.text
+            markdown_source = "negotiated"
+            tok = resp.headers.get("x-markdown-tokens")
+            if tok:
+                markdown_tokens = int(tok)
+            source_url = url
+        elif _looks_like_markdown(resp.text):
+            content = resp.text
+            markdown_source = "negotiated"
+            source_url = url
+    except (httpx.HTTPError, httpx.TimeoutException, ValueError):
+        pass
+
+    # Tier 2: Try markdown.new proxy
+    if content is None:
         try:
-            resp = await client.get(md_url, timeout=15, follow_redirects=True)
-            if resp.status_code == 200 and _looks_like_markdown(resp.text):
-                content = resp.text
-                source_url = md_url
-        except (httpx.HTTPError, httpx.TimeoutException):
-            pass  # fall through to original URL
+            proxy_url = f"https://markdown.new/{url}"
+            resp = await client.get(proxy_url, timeout=15, follow_redirects=True)
+            resp.raise_for_status()
+            proxy_text = resp.text
+            if proxy_text and _looks_like_markdown(proxy_text):
+                content = proxy_text
+                markdown_source = "markdown_new"
+                tok = resp.headers.get("x-markdown-tokens")
+                if tok:
+                    markdown_tokens = int(tok)
+                source_url = url
+        except (httpx.HTTPError, httpx.TimeoutException, ValueError):
+            pass
 
-    # Fall back to original URL
+    # Tier 3: Fall back to original URL + html2text
     if content is None:
         try:
             resp = await client.get(url, timeout=15, follow_redirects=True)
@@ -280,6 +325,7 @@ async def fetch_url(
                 content = text
             else:
                 content = html_to_markdown(text)
+            markdown_source = "html2text"
             source_url = url
         except httpx.TimeoutException:
             return {"content": None, "doc_path": doc_path, "meta": None, "from_cache": False,
@@ -292,7 +338,9 @@ async def fetch_url(
                     "error": f"Connection error fetching {url}: {exc}"}
 
     # Dual storage: raw file + metadata
-    meta = _store_raw(doc_path, content, source_url)
+    meta = _store_raw(doc_path, content, source_url,
+                      markdown_source=markdown_source,
+                      markdown_tokens=markdown_tokens)
     return {"content": content, "doc_path": doc_path, "meta": meta,
             "from_cache": False, "error": None}
 
@@ -309,8 +357,9 @@ def register_fetcher_tools(mcp) -> None:
     async def rlm_fetch(url: str, ctx: Context, force: bool = False) -> str:
         """Fetch a URL and store as docs + index into knowledge store.
 
-        Tries .md variant first (Mintlify convention), falls back to HTML->markdown.
-        Cached files younger than 7 days are returned without re-fetching unless force=True.
+        Uses a three-tier cascade: Accept: text/markdown negotiation, markdown.new
+        proxy, then HTML->markdown. Cached files younger than 7 days are returned
+        without re-fetching unless force=True.
         """
         app = ctx.request_context.lifespan_context
         result = await fetch_url(app.http, url, force=force)
