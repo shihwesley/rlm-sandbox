@@ -3,6 +3,6 @@ __pycache__/
 .pytest_cache/
 *.mv2
 .DS_Store
-.claude/cache/
+.claude/
 docs/plans/context-forward.md
 SIMPLIFICATION_LOG.md
