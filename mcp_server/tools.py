@@ -126,6 +126,7 @@ def register_tools(mcp) -> None:
             max_iterations=max_iterations,
             max_llm_calls=max_llm_calls,
             sandbox_url=BASE_URL,
+            callback_server=app.llm_callback,
         )
 
         if result.get("error"):
@@ -137,6 +138,50 @@ def register_tools(mcp) -> None:
             await _post_exec(app, store_code)
 
         return json.dumps(result, indent=2, default=str)
+
+    # Pricing table: model -> ($/1M input tokens, $/1M output tokens)
+    _PRICING: dict[str, tuple[float, float]] = {
+        "anthropic/claude-haiku-4-5-20251001": (0.80, 4.00),
+    }
+
+    @mcp.tool()
+    async def rlm_usage(ctx: Context, reset: bool = False) -> str:
+        """Return cumulative LLM token usage stats for this session.
+
+        Set reset=True to zero all counters after reading.
+        """
+        app = _ctx(ctx)
+        cb = app.llm_callback
+        if reset:
+            cb.reset_usage()
+            return "Usage counters reset."
+
+        usage = cb.get_usage()
+        total_in = usage["total_input_tokens"]
+        total_out = usage["total_output_tokens"]
+        total_calls = usage["total_calls"]
+
+        # Estimate cost using known pricing; sum across models present in session
+        total_cost = 0.0
+        for model, stats in usage.get("calls_by_model", {}).items():
+            price_in, price_out = _PRICING.get(model, (0.0, 0.0))
+            total_cost += stats["input_tokens"] * price_in / 1_000_000
+            total_cost += stats["output_tokens"] * price_out / 1_000_000
+
+        lines = [
+            f"LLM calls: {total_calls}",
+            f"Input tokens: {total_in:,}",
+            f"Output tokens: {total_out:,}",
+            f"Estimated cost: ${total_cost:.4f}",
+        ]
+        if usage["calls_by_model"]:
+            lines.append("By model:")
+            for model, stats in usage["calls_by_model"].items():
+                lines.append(
+                    f"  {model}: {stats['calls']} calls, "
+                    f"{stats['input_tokens']:,} in, {stats['output_tokens']:,} out"
+                )
+        return "\n".join(lines)
 
     @mcp.tool()
     async def rlm_reset(ctx: Context) -> str:

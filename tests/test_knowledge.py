@@ -769,3 +769,310 @@ class TestIncrementalIndexing:
         assert mock_mem.put_many.call_count == 1
         assert mock_mem.commit.call_count == 1
         assert len(mock_mem.put_many.call_args[0][0]) == 50
+
+
+class TestThreadFilter:
+    """Thread/namespace filtering for ingest, search, and ask."""
+
+    # -- ingest --
+
+    def test_ingest_stores_thread_in_metadata(self):
+        from mcp_server.knowledge import KnowledgeStore
+
+        store = KnowledgeStore("test")
+        mock_mem = _make_mock_mem()
+        store.mem = mock_mem
+        store._embedder_checked = True
+        store._embedder = None
+
+        store.ingest("Doc", "content", thread="alpha")
+
+        docs = mock_mem.put_many.call_args[0][0]
+        assert docs[0]["metadata"]["thread"] == "alpha"
+
+    def test_ingest_no_thread_leaves_metadata_empty(self):
+        from mcp_server.knowledge import KnowledgeStore
+
+        store = KnowledgeStore("test")
+        mock_mem = _make_mock_mem()
+        store.mem = mock_mem
+        store._embedder_checked = True
+        store._embedder = None
+
+        store.ingest("Doc", "content")
+
+        docs = mock_mem.put_many.call_args[0][0]
+        assert "thread" not in docs[0]["metadata"]
+
+    def test_ingest_thread_does_not_clobber_existing_metadata(self):
+        from mcp_server.knowledge import KnowledgeStore
+
+        store = KnowledgeStore("test")
+        mock_mem = _make_mock_mem()
+        store.mem = mock_mem
+        store._embedder_checked = True
+        store._embedder = None
+
+        store.ingest("Doc", "content", metadata={"source": "wiki"}, thread="beta")
+
+        docs = mock_mem.put_many.call_args[0][0]
+        assert docs[0]["metadata"]["thread"] == "beta"
+        assert docs[0]["metadata"]["source"] == "wiki"
+
+    def test_ingest_many_stores_thread_per_doc(self):
+        from mcp_server.knowledge import KnowledgeStore
+
+        store = KnowledgeStore("test")
+        mock_mem = _make_mock_mem()
+        store.mem = mock_mem
+        store._embedder_checked = True
+        store._embedder = None
+
+        docs = [
+            {"title": "A", "text": "aaa", "thread": "t1"},
+            {"title": "B", "text": "bbb"},
+        ]
+        store.ingest_many(docs)
+
+        prepared = mock_mem.put_many.call_args[0][0]
+        assert prepared[0]["metadata"]["thread"] == "t1"
+        assert "thread" not in prepared[1]["metadata"]
+
+    # -- search --
+
+    def test_search_filters_by_thread(self):
+        from mcp_server.knowledge import KnowledgeStore
+
+        store = KnowledgeStore("test")
+        mock_mem = _make_mock_mem()
+        mock_mem.find.return_value = {
+            "hits": [
+                {"title": "A", "score": 0.9, "snippet": "s", "metadata": {"thread": "t1"}},
+                {"title": "B", "score": 0.8, "snippet": "s", "metadata": {"thread": "t2"}},
+                {"title": "C", "score": 0.7, "snippet": "s", "metadata": {"thread": "t1"}},
+            ]
+        }
+        store.mem = mock_mem
+        store._embedder_checked = True
+        store._embedder = None
+
+        results = store.search("q", thread="t1")
+
+        assert len(results["hits"]) == 2
+        assert all(h["metadata"]["thread"] == "t1" for h in results["hits"])
+
+    def test_search_no_thread_returns_all(self):
+        from mcp_server.knowledge import KnowledgeStore
+
+        store = KnowledgeStore("test")
+        mock_mem = _make_mock_mem()
+        mock_mem.find.return_value = {
+            "hits": [
+                {"title": "A", "score": 0.9, "snippet": "s", "metadata": {"thread": "t1"}},
+                {"title": "B", "score": 0.8, "snippet": "s", "metadata": {}},
+            ]
+        }
+        store.mem = mock_mem
+        store._embedder_checked = True
+        store._embedder = None
+
+        results = store.search("q")
+
+        # No filter: both docs returned
+        assert len(results["hits"]) == 2
+
+    def test_search_thread_no_match_returns_empty(self):
+        from mcp_server.knowledge import KnowledgeStore
+
+        store = KnowledgeStore("test")
+        mock_mem = _make_mock_mem()
+        mock_mem.find.return_value = {
+            "hits": [
+                {"title": "A", "score": 0.9, "snippet": "s", "metadata": {"thread": "other"}},
+            ]
+        }
+        store.mem = mock_mem
+        store._embedder_checked = True
+        store._embedder = None
+
+        results = store.search("q", thread="none")
+
+        assert results["hits"] == []
+
+    def test_search_old_docs_without_thread_field_excluded_when_filter_set(self):
+        """Old docs without metadata.thread do not match when a thread filter is active."""
+        from mcp_server.knowledge import KnowledgeStore
+
+        store = KnowledgeStore("test")
+        mock_mem = _make_mock_mem()
+        mock_mem.find.return_value = {
+            "hits": [
+                # old doc: no thread field at all
+                {"title": "Old", "score": 0.9, "snippet": "s", "metadata": {}},
+                # new doc: has matching thread
+                {"title": "New", "score": 0.8, "snippet": "s", "metadata": {"thread": "t1"}},
+            ]
+        }
+        store.mem = mock_mem
+        store._embedder_checked = True
+        store._embedder = None
+
+        results = store.search("q", thread="t1")
+
+        titles = [h["title"] for h in results["hits"]]
+        assert "New" in titles
+        assert "Old" not in titles
+
+    def test_search_old_docs_without_thread_returned_when_no_filter(self):
+        """Old docs without metadata.thread still appear when no thread filter is set (REQ-4)."""
+        from mcp_server.knowledge import KnowledgeStore
+
+        store = KnowledgeStore("test")
+        mock_mem = _make_mock_mem()
+        mock_mem.find.return_value = {
+            "hits": [
+                {"title": "Old", "score": 0.9, "snippet": "s", "metadata": {}},
+            ]
+        }
+        store.mem = mock_mem
+        store._embedder_checked = True
+        store._embedder = None
+
+        results = store.search("q")
+
+        assert len(results["hits"]) == 1
+        assert results["hits"][0]["title"] == "Old"
+
+    # -- ask --
+
+    def test_ask_filters_hits_by_thread(self):
+        from mcp_server.knowledge import KnowledgeStore
+
+        store = KnowledgeStore("test")
+        mock_mem = _make_mock_mem()
+        mock_mem.ask.return_value = {
+            "answer": "42",
+            "hits": [
+                {"title": "A", "score": 0.9, "snippet": "s", "metadata": {"thread": "t1"}},
+                {"title": "B", "score": 0.8, "snippet": "s", "metadata": {"thread": "t2"}},
+            ],
+        }
+        store.mem = mock_mem
+        store._embedder_checked = True
+        store._embedder = None
+
+        result = store.ask("question", thread="t1")
+
+        assert len(result["hits"]) == 1
+        assert result["hits"][0]["title"] == "A"
+        assert result["answer"] == "42"
+
+    def test_ask_no_thread_returns_all_hits(self):
+        from mcp_server.knowledge import KnowledgeStore
+
+        store = KnowledgeStore("test")
+        mock_mem = _make_mock_mem()
+        store.mem = mock_mem
+        store._embedder_checked = True
+        store._embedder = None
+
+        result = store.ask("question")
+
+        # Default mock has 1 hit; no filtering applied
+        assert len(result["hits"]) == 1
+
+    # -- MCP tools --
+
+    def test_mcp_rlm_search_passes_thread(self):
+        from mcp_server.knowledge import register_knowledge_tools, get_store
+
+        mcp = MagicMock()
+        registered = {}
+
+        def tool_decorator():
+            def wrapper(fn):
+                registered[fn.__name__] = fn
+                return fn
+            return wrapper
+
+        mcp.tool = tool_decorator
+        register_knowledge_tools(mcp)
+
+        mock_mem = _make_mock_mem()
+        mock_mem.find.return_value = {
+            "hits": [
+                {"title": "X", "score": 0.9, "snippet": "s", "metadata": {"thread": "proj"}},
+            ]
+        }
+        store = get_store("thread-search-proj")
+        store.mem = mock_mem
+        store._embedder_checked = True
+        store._embedder = None
+
+        fn = registered["rlm_search"]
+        ctx = MagicMock()
+        result = _run(fn("query", ctx, project="thread-search-proj", thread="proj"))
+
+        assert "X" in result
+
+    def test_mcp_rlm_ingest_passes_thread(self):
+        from mcp_server.knowledge import register_knowledge_tools, get_store
+
+        mcp = MagicMock()
+        registered = {}
+
+        def tool_decorator():
+            def wrapper(fn):
+                registered[fn.__name__] = fn
+                return fn
+            return wrapper
+
+        mcp.tool = tool_decorator
+        register_knowledge_tools(mcp)
+
+        mock_mem = _make_mock_mem()
+        store = get_store("thread-ingest-proj")
+        store.mem = mock_mem
+        store._embedder_checked = True
+        store._embedder = None
+
+        fn = registered["rlm_ingest"]
+        ctx = MagicMock()
+        _run(fn("Title", "body text", ctx, project="thread-ingest-proj", thread="session-1"))
+
+        docs = mock_mem.put_many.call_args[0][0]
+        assert docs[0]["metadata"]["thread"] == "session-1"
+
+    def test_mcp_rlm_ask_passes_thread(self):
+        from mcp_server.knowledge import register_knowledge_tools, get_store
+
+        mcp = MagicMock()
+        registered = {}
+
+        def tool_decorator():
+            def wrapper(fn):
+                registered[fn.__name__] = fn
+                return fn
+            return wrapper
+
+        mcp.tool = tool_decorator
+        register_knowledge_tools(mcp)
+
+        mock_mem = _make_mock_mem()
+        mock_mem.ask.return_value = {
+            "answer": "yes",
+            "hits": [
+                {"title": "Z", "score": 0.9, "snippet": "s", "metadata": {"thread": "qa"}},
+            ],
+        }
+        store = get_store("thread-ask-proj")
+        store.mem = mock_mem
+        store._embedder_checked = True
+        store._embedder = None
+
+        fn = registered["rlm_ask"]
+        ctx = MagicMock()
+        result = _run(fn("question", ctx, project="thread-ask-proj", thread="qa"))
+
+        assert "yes" in result
+        assert "Z" in result

@@ -78,7 +78,7 @@ class SandboxInterpreter:
 
 
 async def inject_llm_stub(client: httpx.AsyncClient, callback_url: str) -> None:
-    """Inject llm_query() stub into container that POSTs to host.
+    """Inject llm_query() and llm_query_batch() stubs into container that POST to host.
 
     Uses urllib.request (stdlib, always available) to call back to the
     host-side callback endpoint. API keys never enter the container.
@@ -86,6 +86,7 @@ async def inject_llm_stub(client: httpx.AsyncClient, callback_url: str) -> None:
     stub_code = (
         "import urllib.request as _llm_urllib\n"
         "import json as _llm_json\n"
+        "import concurrent.futures as _llm_futures\n"
         "def llm_query(prompt):\n"
         "    _data = _llm_json.dumps({'prompt': prompt}).encode()\n"
         "    _req = _llm_urllib.Request(\n"
@@ -96,7 +97,83 @@ async def inject_llm_stub(client: httpx.AsyncClient, callback_url: str) -> None:
         "    )\n"
         "    with _llm_urllib.urlopen(_req, timeout=120) as _resp:\n"
         "        return _llm_json.loads(_resp.read())['result']\n"
+        "def llm_query_batch(prompts):\n"
+        "    def _safe_query(p):\n"
+        "        try:\n"
+        "            return llm_query(p)\n"
+        "        except Exception as _e:\n"
+        "            return '[error] ' + str(_e)\n"
+        "    _workers = min(len(prompts), 8)\n"
+        "    if _workers == 0:\n"
+        "        return []\n"
+        "    with _llm_futures.ThreadPoolExecutor(max_workers=_workers) as _pool:\n"
+        "        return list(_pool.map(_safe_query, prompts))\n"
     )
+    resp = await client.post("/exec", json={"code": stub_code})
+    resp.raise_for_status()
+
+
+async def inject_tool_stubs(
+    client: httpx.AsyncClient,
+    callback_base_url: str,
+    tools: dict[str, str],
+) -> None:
+    """Inject sandbox stub functions for each tool in the registry.
+
+    Each stub POSTs to {callback_base_url}/tool_call with tool_name + input,
+    then returns the JSON result. Uses urllib.request (stdlib) so no extra
+    packages are needed inside the container.
+
+    Args:
+        client: httpx client pointed at the sandbox /exec endpoint
+        callback_base_url: Base URL of the host callback server (no trailing /)
+        tools: Mapping of sandbox function name -> MCP tool name (from SANDBOX_TOOLS)
+    """
+    tool_call_url = f"{callback_base_url}/tool_call"
+
+    # Build one stub per tool and emit them in a single /exec call
+    stub_lines: list[str] = [
+        "import urllib.request as _tc_urllib",
+        "import json as _tc_json",
+        "",
+        "def _tool_call(tool_name, **kwargs):",
+        "    _data = _tc_json.dumps({'tool_name': tool_name, 'input': kwargs}).encode()",
+        "    _req = _tc_urllib.Request(",
+        f'        "{tool_call_url}",',
+        "        data=_data,",
+        "        headers={'Content-Type': 'application/json'},",
+        "        method='POST',",
+        "    )",
+        "    with _tc_urllib.urlopen(_req, timeout=60) as _resp:",
+        "        return _tc_json.loads(_resp.read())['result']",
+        "",
+    ]
+
+    # Per-tool wrapper with named parameters
+    _TOOL_SIGNATURES: dict[str, str] = {
+        "search_knowledge": "query, top_k=10",
+        "ask_knowledge": "question",
+        "fetch_url": "url",
+        "load_file": "path, var_name",
+        "apple_search": "query, framework=None",
+    }
+
+    for func_name in tools:
+        sig = _TOOL_SIGNATURES.get(func_name, "**kwargs")
+        # Build a forwarding call that maps positional/keyword args to the dict
+        if sig == "**kwargs":
+            call_args = "**kwargs"
+        else:
+            # Extract param names (strip defaults) for the call-through
+            param_names = [p.split("=")[0].strip() for p in sig.split(",")]
+            call_args = ", ".join(f"{p}={p}" for p in param_names)
+        stub_lines += [
+            f"def {func_name}({sig}):",
+            f"    return _tool_call('{func_name}', {call_args})",
+            "",
+        ]
+
+    stub_code = "\n".join(stub_lines)
     resp = await client.post("/exec", json={"code": stub_code})
     resp.raise_for_status()
 
@@ -124,15 +201,21 @@ async def run_sub_agent(
     max_llm_calls: int = 30,
     sandbox_url: str = "http://localhost:8080",
     sub_lm_model: str = DEFAULT_SUB_LM,
+    callback_server: Any = None,
 ) -> dict[str, Any]:
     """Execute a DSPy RLM sub-agent.
 
     Returns dict with 'result' (output fields) and 'trajectory' (step trace).
+    If callback_server is provided, a 'usage' key is added with per-run token stats.
     """
-    from mcp_server.signatures import validate_signature
+    from mcp_server.signatures import validate_signature, resolve_signature
 
+    signature = resolve_signature(signature)
     if not validate_signature(signature):
         return {"error": "Invalid signature format", "result": None, "trajectory": None}
+
+    # Snapshot usage before the run so we can compute the diff
+    usage_before = callback_server.get_usage() if callback_server is not None else None
 
     sub_lm = dspy.LM(sub_lm_model)
 
@@ -177,4 +260,14 @@ async def run_sub_agent(
 
     trajectory = getattr(prediction, "trajectory", None)
 
-    return {"result": result, "trajectory": trajectory}
+    ret: dict[str, Any] = {"result": result, "trajectory": trajectory}
+
+    if callback_server is not None:
+        usage_after = callback_server.get_usage()
+        ret["usage"] = {
+            "input_tokens": usage_after["total_input_tokens"] - usage_before["total_input_tokens"],
+            "output_tokens": usage_after["total_output_tokens"] - usage_before["total_output_tokens"],
+            "llm_calls": usage_after["total_calls"] - usage_before["total_calls"],
+        }
+
+    return ret

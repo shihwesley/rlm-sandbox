@@ -14,10 +14,10 @@ from mcp_server.apple_docs import register_apple_docs_tools
 from mcp_server.docker_manager import BASE_URL, DockerManager
 from mcp_server.fetcher import register_fetcher_tools
 from mcp_server.knowledge import KnowledgeStore, get_store, register_knowledge_tools
-from mcp_server.llm_callback import LLMCallbackServer
+from mcp_server.llm_callback import LLMCallbackServer, SANDBOX_TOOLS
 from mcp_server.research import register_research_tools
 from mcp_server.session import SessionManager
-from mcp_server.sub_agent import inject_llm_stub
+from mcp_server.sub_agent import inject_llm_stub, inject_tool_stubs
 from mcp_server.tools import register_tools
 
 log = logging.getLogger(__name__)
@@ -52,6 +52,13 @@ async def lifespan(server: FastMCP) -> AsyncIterator[AppContext]:
         try:
             await inject_llm_stub(sandbox_client, cb_url)
             log.info("Injected llm_query() stub (callback → %s)", cb_url)
+            # Wire tool handlers on the callback server then inject stubs into sandbox
+            cb_base = (
+                callback.base_url_local if manager._no_docker else callback.base_url
+            )
+            callback.setup_tool_handlers(store, client)
+            await inject_tool_stubs(sandbox_client, cb_base, SANDBOX_TOOLS)
+            log.info("Injected tool stubs (callback base → %s)", cb_base)
         finally:
             await sandbox_client.aclose()
 

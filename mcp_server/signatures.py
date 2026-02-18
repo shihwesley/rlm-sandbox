@@ -16,6 +16,42 @@ CLASSIFY_SIGNATURE = "text, categories -> category: str, confidence: float"
 SUMMARIZE_SIGNATURE = "document -> summary: str"
 
 
+# -- Deep reasoning signatures --
+
+_DEEP_REASONING_INSTRUCTIONS = """\
+Use a 3-phase reasoning strategy to answer the query from the provided context.
+
+Phase 1 — Recon: Read the full context. Note its size and format. Identify
+chunk boundaries (e.g. paragraph breaks, section headers, numbered items).
+Determine which sections are likely relevant to the query.
+
+Phase 2 — Filter: Split the context along the boundaries identified in Phase 1.
+For each chunk, apply a keyword or regex check against the query terms. For
+chunks that pass the filter, call llm_query() to extract relevant information.
+Discard chunks that clearly don't relate to the query.
+
+Phase 3 — Aggregate: Collect the llm_query() results from Phase 2. Call
+llm_query() once more to synthesize them into a single coherent answer.
+Return that synthesized answer as the output.
+"""
+
+_DEEP_REASONING_MULTI_INSTRUCTIONS = """\
+Use a 3-phase reasoning strategy to answer the query across multiple documents.
+
+Phase 1 — Recon: Read all documents. Note each document's size, format, and
+chunk boundaries (paragraph breaks, section headers, numbered items). Identify
+which documents and sections are likely relevant to the query.
+
+Phase 2 — Filter: For each document, split along its boundaries. Apply a
+keyword or regex check against query terms. For chunks that pass, call
+llm_query() to extract relevant information. Discard irrelevant chunks.
+
+Phase 3 — Aggregate: Collect all llm_query() results from Phase 2 across all
+documents. Call llm_query() once more to synthesize them into a single
+coherent answer. Return that synthesized answer as the output.
+"""
+
+
 # -- Signature validation --
 
 # Valid Python identifier (no leading digit, no dunder)
@@ -38,6 +74,10 @@ def validate_signature(signature: str | type) -> bool:
 
     if not isinstance(signature, str):
         return False
+
+    # Named signatures are valid without needing regex match
+    if signature in NAMED_SIGNATURES:
+        return True
 
     sig = signature.strip()
     if not sig or "->" not in sig:
@@ -98,3 +138,36 @@ def build_custom_signature(
 
     # Create the Signature subclass
     return type(name, (dspy.Signature,), attrs)
+
+
+# -- Deep reasoning signature instances --
+# Built after build_custom_signature is defined.
+
+DEEP_REASONING_SIGNATURE: type = build_custom_signature(
+    "DeepReasoning",
+    {"context": "source text to reason over", "query": "the question to answer"},
+    {"answer": "synthesized answer from phased reasoning"},
+    instructions=_DEEP_REASONING_INSTRUCTIONS,
+)
+
+DEEP_REASONING_MULTI_SIGNATURE: type = build_custom_signature(
+    "DeepReasoningMulti",
+    {"documents": "newline-separated documents to reason over", "query": "the question to answer"},
+    {"answer": "synthesized answer from phased reasoning across all documents"},
+    instructions=_DEEP_REASONING_MULTI_INSTRUCTIONS,
+)
+
+
+# -- Named signature lookup --
+
+NAMED_SIGNATURES: dict[str, type] = {
+    "deep_reasoning": DEEP_REASONING_SIGNATURE,
+    "deep_reasoning_multi": DEEP_REASONING_MULTI_SIGNATURE,
+}
+
+
+def resolve_signature(signature: str | type) -> str | type:
+    """Resolve a short name to a Signature class, or return the input unchanged."""
+    if isinstance(signature, str) and signature in NAMED_SIGNATURES:
+        return NAMED_SIGNATURES[signature]
+    return signature

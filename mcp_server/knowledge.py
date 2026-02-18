@@ -90,17 +90,21 @@ class KnowledgeStore:
         text: str,
         label: str = "kb",
         metadata: dict[str, Any] | None = None,
+        thread: str | None = None,
     ) -> list:
         """Add a single document incrementally. Returns frame IDs."""
         self._ensure_open()
+        meta = dict(metadata) if metadata else {}
+        if thread is not None:
+            meta["thread"] = thread
         doc = {
             "title": title,
             "label": label,
             "text": text,
-            "metadata": metadata or {},
+            "metadata": meta,
         }
         frame_ids = self.mem.put_many([doc], embedder=self.embedder)
-        self.mem.seal()
+        self.mem.commit()
         return frame_ids
 
     def ingest_many(
@@ -109,17 +113,19 @@ class KnowledgeStore:
     ) -> list:
         """Batch-ingest documents. Each dict needs at least 'title' and 'text'."""
         self._ensure_open()
-        prepared = [
-            {
+        prepared = []
+        for d in docs:
+            meta = dict(d.get("metadata", {}))
+            if "thread" in d:
+                meta["thread"] = d["thread"]
+            prepared.append({
                 "title": d["title"],
                 "label": d.get("label", "kb"),
                 "text": d["text"],
-                "metadata": d.get("metadata", {}),
-            }
-            for d in docs
-        ]
+                "metadata": meta,
+            })
         frame_ids = self.mem.put_many(prepared, embedder=self.embedder)
-        self.mem.seal()
+        self.mem.commit()
         return frame_ids
 
     def search(
@@ -128,10 +134,13 @@ class KnowledgeStore:
         top_k: int = 10,
         mode: str = "auto",
         adaptive: bool = True,
+        thread: str | None = None,
     ) -> dict[str, Any]:
         """Hybrid search with adaptive retrieval (score-cliff cutoff).
 
         Returns dict with 'hits' list. Each hit has title, score, snippet.
+        When thread is specified, only hits whose metadata["thread"] matches
+        are returned.
         """
         self._ensure_open()
 
@@ -149,6 +158,12 @@ class KnowledgeStore:
             kwargs["k"] = top_k
 
         results = self.mem.find(query, **kwargs)
+        # Post-filter by thread before trimming
+        if "hits" in results and thread is not None:
+            results["hits"] = [
+                h for h in results["hits"]
+                if h.get("metadata", {}).get("thread") == thread
+            ]
         # Trim to top_k even with adaptive (adaptive may return up to max_k)
         if "hits" in results:
             results["hits"] = results["hits"][:top_k]
@@ -160,16 +175,26 @@ class KnowledgeStore:
         context_only: bool = False,
         top_k: int = 8,
         mode: str = "auto",
+        thread: str | None = None,
     ) -> dict[str, Any]:
-        """RAG Q&A or context-only chunk retrieval."""
+        """RAG Q&A or context-only chunk retrieval.
+
+        When thread is specified, post-filters returned hits by thread.
+        """
         self._ensure_open()
-        return self.mem.ask(
+        result = self.mem.ask(
             question,
             k=top_k,
             mode=mode,
             context_only=context_only,
             embedder=self.embedder,
         )
+        if thread is not None and "hits" in result:
+            result["hits"] = [
+                h for h in result["hits"]
+                if h.get("metadata", {}).get("thread") == thread
+            ]
+        return result
 
     def timeline(
         self,
@@ -239,6 +264,7 @@ def register_knowledge_tools(mcp) -> None:
         top_k: int = 10,
         mode: str = "auto",
         project: str | None = None,
+        thread: str | None = None,
     ) -> str:
         """Search the knowledge store. Returns ranked chunks with source attribution.
 
@@ -247,10 +273,11 @@ def register_knowledge_tools(mcp) -> None:
             top_k: Max results to return (default 10)
             mode: Search mode - 'auto' (hybrid), 'vec' (vector only), 'lex' (BM25 only)
             project: Project hash override (uses cwd-based hash if omitted)
+            thread: Optional thread/namespace filter; only returns docs in that thread
         """
         try:
             store = get_store(project)
-            results = store.search(query, top_k=top_k, mode=mode)
+            results = store.search(query, top_k=top_k, mode=mode, thread=thread)
             hits = results.get("hits", [])
             if not hits:
                 return "No results found."
@@ -267,6 +294,7 @@ def register_knowledge_tools(mcp) -> None:
         top_k: int = 8,
         mode: str = "auto",
         project: str | None = None,
+        thread: str | None = None,
     ) -> str:
         """RAG Q&A over the knowledge store, or retrieve context chunks only.
 
@@ -276,6 +304,7 @@ def register_knowledge_tools(mcp) -> None:
             top_k: Number of context chunks to retrieve
             mode: Search mode - 'auto', 'vec', 'lex'
             project: Project hash override
+            thread: Optional thread/namespace filter; only returns docs in that thread
         """
         try:
             store = get_store(project)
@@ -284,6 +313,7 @@ def register_knowledge_tools(mcp) -> None:
                 context_only=context_only,
                 top_k=top_k,
                 mode=mode,
+                thread=thread,
             )
 
             parts = []
@@ -349,6 +379,7 @@ def register_knowledge_tools(mcp) -> None:
         ctx: Context,
         label: str = "kb",
         project: str | None = None,
+        thread: str | None = None,
     ) -> str:
         """Ingest a document into the knowledge store.
 
@@ -357,10 +388,11 @@ def register_knowledge_tools(mcp) -> None:
             text: Document content
             label: Category label (default 'kb')
             project: Project hash override
+            thread: Optional thread/namespace to tag this document
         """
         try:
             store = get_store(project)
-            frame_ids = store.ingest(title=title, text=text, label=label)
+            frame_ids = store.ingest(title=title, text=text, label=label, thread=thread)
             return f"Ingested '{title}' ({len(text)} chars, {len(frame_ids)} frames)"
         except Exception as exc:
             log.exception("rlm_ingest failed")
