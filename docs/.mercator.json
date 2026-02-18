@@ -2,22 +2,10 @@
   "root": "/Users/quartershots/Source/rlm-sandbox",
   "files": [
     {
-      "path": ".claude/docs/developers/fundamentals/reference/markdown-for-agents.md",
-      "tokens": 2216,
-      "size_bytes": 9977,
-      "hash": "f276913db718"
-    },
-    {
-      "path": ".claude/docs/developers/fundamentals/reference/markdown-for-agents.meta.json",
-      "tokens": 121,
-      "size_bytes": 321,
-      "hash": "77563fff0fbd"
-    },
-    {
       "path": ".claude-plugin/plugin.json",
-      "tokens": 263,
-      "size_bytes": 956,
-      "hash": "68a3bf381fbf"
+      "tokens": 286,
+      "size_bytes": 1071,
+      "hash": "fa6e73e2ed74"
     },
     {
       "path": "agents/rlm-researcher.md",
@@ -56,6 +44,12 @@
       "hash": "5b259206ec6a"
     },
     {
+      "path": "docs/plans/specs/deep-reasoning-spec.md",
+      "tokens": 582,
+      "size_bytes": 2435,
+      "hash": "0bcaeae675b8"
+    },
+    {
       "path": "docs/plans/specs/doc-fetcher-spec.md",
       "tokens": 1352,
       "size_bytes": 5139,
@@ -86,6 +80,18 @@
       "hash": "02dec84b7ff0"
     },
     {
+      "path": "docs/plans/specs/parallel-llm-spec.md",
+      "tokens": 513,
+      "size_bytes": 2008,
+      "hash": "bf77dc0b2fdf"
+    },
+    {
+      "path": "docs/plans/specs/programmatic-tools-spec.md",
+      "tokens": 1302,
+      "size_bytes": 5161,
+      "hash": "b9a6ede6e100"
+    },
+    {
       "path": "docs/plans/specs/sandbox-research-spec.md",
       "tokens": 1067,
       "size_bytes": 4428,
@@ -104,10 +110,28 @@
       "hash": "289434adc945"
     },
     {
+      "path": "docs/plans/specs/session-capture-spec.md",
+      "tokens": 661,
+      "size_bytes": 2656,
+      "hash": "fbb10a8a2788"
+    },
+    {
       "path": "docs/plans/specs/session-persistence-spec.md",
       "tokens": 812,
       "size_bytes": 3463,
       "hash": "e2dc1945a4fb"
+    },
+    {
+      "path": "docs/plans/specs/thread-support-spec.md",
+      "tokens": 463,
+      "size_bytes": 1821,
+      "hash": "6eb9fcfa6ee4"
+    },
+    {
+      "path": "docs/plans/specs/token-tracking-spec.md",
+      "tokens": 697,
+      "size_bytes": 2710,
+      "hash": "b50a2422388a"
     },
     {
       "path": "docs/plans/2026-02-16-markdown-first-fetching.md",
@@ -117,27 +141,27 @@
     },
     {
       "path": "docs/plans/findings.md",
-      "tokens": 3507,
-      "size_bytes": 14234,
-      "hash": "056493e21fcb"
+      "tokens": 4070,
+      "size_bytes": 16745,
+      "hash": "4d439b14ae49"
     },
     {
       "path": "docs/plans/manifest.md",
-      "tokens": 855,
-      "size_bytes": 2972,
-      "hash": "4ddfc650f63c"
+      "tokens": 1209,
+      "size_bytes": 4287,
+      "hash": "8c09b29391b4"
     },
     {
       "path": "docs/plans/progress.md",
-      "tokens": 3284,
-      "size_bytes": 11800,
-      "hash": "0bbffe14780d"
+      "tokens": 4147,
+      "size_bytes": 14944,
+      "hash": "73ae0cb4be0b"
     },
     {
       "path": "docs/.mercator.json",
-      "tokens": 12053,
-      "size_bytes": 38539,
-      "hash": "76950d154403"
+      "tokens": 12590,
+      "size_bytes": 40054,
+      "hash": "e379b14de783"
     },
     {
       "path": "docs/.mercator.json.tmp",
@@ -183,15 +207,15 @@
     },
     {
       "path": "mcp_server/knowledge.py",
-      "tokens": 2643,
-      "size_bytes": 11734,
-      "hash": "37787bf803b4"
+      "tokens": 2942,
+      "size_bytes": 13131,
+      "hash": "0fe09bc81e45"
     },
     {
       "path": "mcp_server/llm_callback.py",
-      "tokens": 1139,
-      "size_bytes": 5057,
-      "hash": "78a413053f7d"
+      "tokens": 2701,
+      "size_bytes": 12185,
+      "hash": "8b03a01f0c9d"
     },
     {
       "path": "mcp_server/requirements.txt",
@@ -207,9 +231,9 @@
     },
     {
       "path": "mcp_server/server.py",
-      "tokens": 630,
-      "size_bytes": 2958,
-      "hash": "86700a62b299"
+      "tokens": 726,
+      "size_bytes": 3410,
+      "hash": "d8d320ca5eba"
     },
     {
       "path": "mcp_server/session.py",
@@ -219,9 +243,9 @@
     },
     {
       "path": "mcp_server/signatures.py",
-      "tokens": 720,
-      "size_bytes": 2886,
-      "hash": "35e79393210e"
+      "tokens": 1344,
+      "size_bytes": 5793,
+      "hash": "720d9e0ceafe"
     },
     {
       "path": "mcp_server/srt-config.json",
@@ -231,15 +255,15 @@
     },
     {
       "path": "mcp_server/sub_agent.py",
-      "tokens": 1505,
-      "size_bytes": 6401,
-      "hash": "6616407c7080"
+      "tokens": 2437,
+      "size_bytes": 10204,
+      "hash": "35a1d350ac5e"
     },
     {
       "path": "mcp_server/tools.py",
-      "tokens": 1297,
-      "size_bytes": 5414,
-      "hash": "8d3ab920cb72"
+      "tokens": 1728,
+      "size_bytes": 7144,
+      "hash": "528b50d7f895"
     },
     {
       "path": "research/hybrid-prototype/Dockerfile",
@@ -494,6 +518,12 @@
       "hash": "861ec1098065"
     },
     {
+      "path": "scripts/session_capture.py",
+      "tokens": 2045,
+      "size_bytes": 8965,
+      "hash": "154c3e7c0529"
+    },
+    {
       "path": "scripts/setup.sh",
       "tokens": 555,
       "size_bytes": 1942,
@@ -555,15 +585,15 @@
     },
     {
       "path": "tests/test_knowledge.py",
-      "tokens": 5936,
-      "size_bytes": 25626,
-      "hash": "ae25625479a6"
+      "tokens": 8316,
+      "size_bytes": 35483,
+      "hash": "80b5e48bfb2f"
     },
     {
       "path": "tests/test_llm_callback.py",
-      "tokens": 1359,
-      "size_bytes": 5890,
-      "hash": "a9b61394969d"
+      "tokens": 3742,
+      "size_bytes": 15962,
+      "hash": "51af3a9c3660"
     },
     {
       "path": "tests/test_mcp_server.py",
@@ -590,10 +620,16 @@
       "hash": "59184208eefc"
     },
     {
+      "path": "tests/test_session_capture.py",
+      "tokens": 4292,
+      "size_bytes": 19888,
+      "hash": "fa6e33079d0e"
+    },
+    {
       "path": "tests/test_sub_agent.py",
-      "tokens": 3509,
-      "size_bytes": 15772,
-      "hash": "3e3fc0b3cb9d"
+      "tokens": 7536,
+      "size_bytes": 33527,
+      "hash": "63bfbe585589"
     },
     {
       "path": "workspace/.gitkeep",
@@ -603,9 +639,9 @@
     },
     {
       "path": ".gitignore",
-      "tokens": 39,
-      "size_bytes": 118,
-      "hash": "82dcc9cf691e"
+      "tokens": 38,
+      "size_bytes": 112,
+      "hash": "2db62c7dc571"
     },
     {
       "path": ".mcp.json",
@@ -615,9 +651,9 @@
     },
     {
       "path": "CHANGELOG.md",
-      "tokens": 297,
-      "size_bytes": 1064,
-      "hash": "1c2db1ea285b"
+      "tokens": 555,
+      "size_bytes": 2068,
+      "hash": "971006020db8"
     },
     {
       "path": "CLAUDE.md",
@@ -647,21 +683,16 @@
       "path": "pyproject.toml",
       "tokens": 64,
       "size_bytes": 226,
-      "hash": "a3ecec7552b1"
+      "hash": "a172c5d743b6"
     },
     {
       "path": "README.md",
-      "tokens": 2442,
-      "size_bytes": 8934,
-      "hash": "6366d19d1060"
+      "tokens": 3005,
+      "size_bytes": 11452,
+      "hash": "46e38a6d8934"
     }
   ],
   "directories": [
-    ".claude",
-    ".claude/docs",
-    ".claude/docs/developers",
-    ".claude/docs/developers/fundamentals",
-    ".claude/docs/developers/fundamentals/reference",
     ".claude-plugin",
     "agents",
     "claude-integration",
@@ -684,65 +715,19 @@
     "tests",
     "workspace"
   ],
-  "total_tokens": 141227,
-  "total_files": 109,
+  "total_tokens": 165339,
+  "total_files": 115,
   "skipped": [],
   "merkle": {
-    "root_hash": "c2c7a6d1fdc2",
+    "root_hash": "5c65229f1527",
     "tree": {
-      ".claude/docs/developers/fundamentals/reference/markdown-for-agents.md": {
-        "hash": "f276913db718",
-        "tokens": 2216,
-        "type": "file"
-      },
-      ".claude/docs/developers/fundamentals/reference/markdown-for-agents.meta.json": {
-        "hash": "77563fff0fbd",
-        "tokens": 121,
-        "type": "file"
-      },
-      ".claude/docs/developers/fundamentals/reference": {
-        "hash": "ed0bb87678f1",
-        "children": [
-          ".claude/docs/developers/fundamentals/reference/markdown-for-agents.md",
-          ".claude/docs/developers/fundamentals/reference/markdown-for-agents.meta.json"
-        ],
-        "type": "dir"
-      },
-      ".claude/docs/developers/fundamentals": {
-        "hash": "40e4a2281d3b",
-        "children": [
-          ".claude/docs/developers/fundamentals/reference"
-        ],
-        "type": "dir"
-      },
-      ".claude/docs/developers": {
-        "hash": "bb18f82d559d",
-        "children": [
-          ".claude/docs/developers/fundamentals"
-        ],
-        "type": "dir"
-      },
-      ".claude/docs": {
-        "hash": "80ac4fb9747d",
-        "children": [
-          ".claude/docs/developers"
-        ],
-        "type": "dir"
-      },
-      ".claude": {
-        "hash": "0944d339af2f",
-        "children": [
-          ".claude/docs"
-        ],
-        "type": "dir"
-      },
       ".claude-plugin/plugin.json": {
-        "hash": "68a3bf381fbf",
-        "tokens": 263,
+        "hash": "fa6e73e2ed74",
+        "tokens": 286,
         "type": "file"
       },
       ".claude-plugin": {
-        "hash": "9d23d803d79c",
+        "hash": "1796a44458f4",
         "children": [
           ".claude-plugin/plugin.json"
         ],
@@ -795,6 +780,11 @@
         "tokens": 867,
         "type": "file"
       },
+      "docs/plans/specs/deep-reasoning-spec.md": {
+        "hash": "0bcaeae675b8",
+        "tokens": 582,
+        "type": "file"
+      },
       "docs/plans/specs/doc-fetcher-spec.md": {
         "hash": "5840341da97c",
         "tokens": 1352,
@@ -820,6 +810,16 @@
         "tokens": 1337,
         "type": "file"
       },
+      "docs/plans/specs/parallel-llm-spec.md": {
+        "hash": "bf77dc0b2fdf",
+        "tokens": 513,
+        "type": "file"
+      },
+      "docs/plans/specs/programmatic-tools-spec.md": {
+        "hash": "b9a6ede6e100",
+        "tokens": 1302,
+        "type": "file"
+      },
       "docs/plans/specs/sandbox-research-spec.md": {
         "hash": "784336f7132d",
         "tokens": 1067,
@@ -835,24 +835,45 @@
         "tokens": 709,
         "type": "file"
       },
+      "docs/plans/specs/session-capture-spec.md": {
+        "hash": "fbb10a8a2788",
+        "tokens": 661,
+        "type": "file"
+      },
       "docs/plans/specs/session-persistence-spec.md": {
         "hash": "e2dc1945a4fb",
         "tokens": 812,
         "type": "file"
       },
+      "docs/plans/specs/thread-support-spec.md": {
+        "hash": "6eb9fcfa6ee4",
+        "tokens": 463,
+        "type": "file"
+      },
+      "docs/plans/specs/token-tracking-spec.md": {
+        "hash": "b50a2422388a",
+        "tokens": 697,
+        "type": "file"
+      },
       "docs/plans/specs": {
-        "hash": "ec870ff13724",
+        "hash": "7b4f7d74d8b3",
         "children": [
           "docs/plans/specs/claude-integration-spec.md",
+          "docs/plans/specs/deep-reasoning-spec.md",
           "docs/plans/specs/doc-fetcher-spec.md",
           "docs/plans/specs/docker-sandbox-spec.md",
           "docs/plans/specs/dspy-integration-spec.md",
           "docs/plans/specs/mcp-server-spec.md",
           "docs/plans/specs/orchestrator-integration-spec.md",
+          "docs/plans/specs/parallel-llm-spec.md",
+          "docs/plans/specs/programmatic-tools-spec.md",
           "docs/plans/specs/sandbox-research-spec.md",
           "docs/plans/specs/search-engine-spec.md",
           "docs/plans/specs/search-spike-spec.md",
-          "docs/plans/specs/session-persistence-spec.md"
+          "docs/plans/specs/session-capture-spec.md",
+          "docs/plans/specs/session-persistence-spec.md",
+          "docs/plans/specs/thread-support-spec.md",
+          "docs/plans/specs/token-tracking-spec.md"
         ],
         "type": "dir"
       },
@@ -862,22 +883,22 @@
         "type": "file"
       },
       "docs/plans/findings.md": {
-        "hash": "056493e21fcb",
-        "tokens": 3507,
+        "hash": "4d439b14ae49",
+        "tokens": 4070,
         "type": "file"
       },
       "docs/plans/manifest.md": {
-        "hash": "4ddfc650f63c",
-        "tokens": 855,
+        "hash": "8c09b29391b4",
+        "tokens": 1209,
         "type": "file"
       },
       "docs/plans/progress.md": {
-        "hash": "0bbffe14780d",
-        "tokens": 3284,
+        "hash": "73ae0cb4be0b",
+        "tokens": 4147,
         "type": "file"
       },
       "docs/plans": {
-        "hash": "466a30ca075f",
+        "hash": "aa2a5ef15dfb",
         "children": [
           "docs/plans/specs",
           "docs/plans/2026-02-16-markdown-first-fetching.md",
@@ -888,8 +909,8 @@
         "type": "dir"
       },
       "docs/.mercator.json": {
-        "hash": "76950d154403",
-        "tokens": 12053,
+        "hash": "e379b14de783",
+        "tokens": 12590,
         "type": "file"
       },
       "docs/.mercator.json.tmp": {
@@ -903,7 +924,7 @@
         "type": "file"
       },
       "docs": {
-        "hash": "0361dc29784c",
+        "hash": "924b3fafbc97",
         "children": [
           "docs/plans",
           "docs/.mercator.json",
@@ -945,13 +966,13 @@
         "type": "file"
       },
       "mcp_server/knowledge.py": {
-        "hash": "37787bf803b4",
-        "tokens": 2643,
+        "hash": "0fe09bc81e45",
+        "tokens": 2942,
         "type": "file"
       },
       "mcp_server/llm_callback.py": {
-        "hash": "78a413053f7d",
-        "tokens": 1139,
+        "hash": "8b03a01f0c9d",
+        "tokens": 2701,
         "type": "file"
       },
       "mcp_server/requirements.txt": {
@@ -965,8 +986,8 @@
         "type": "file"
       },
       "mcp_server/server.py": {
-        "hash": "86700a62b299",
-        "tokens": 630,
+        "hash": "d8d320ca5eba",
+        "tokens": 726,
         "type": "file"
       },
       "mcp_server/session.py": {
@@ -975,8 +996,8 @@
         "type": "file"
       },
       "mcp_server/signatures.py": {
-        "hash": "35e79393210e",
-        "tokens": 720,
+        "hash": "720d9e0ceafe",
+        "tokens": 1344,
         "type": "file"
       },
       "mcp_server/srt-config.json": {
@@ -985,17 +1006,17 @@
         "type": "file"
       },
       "mcp_server/sub_agent.py": {
-        "hash": "6616407c7080",
-        "tokens": 1505,
+        "hash": "35a1d350ac5e",
+        "tokens": 2437,
         "type": "file"
       },
       "mcp_server/tools.py": {
-        "hash": "8d3ab920cb72",
-        "tokens": 1297,
+        "hash": "528b50d7f895",
+        "tokens": 1728,
         "type": "file"
       },
       "mcp_server": {
-        "hash": "594b7bb59871",
+        "hash": "385e7aabe25d",
         "children": [
           "mcp_server/__init__.py",
           "mcp_server/apple_docs.py",
@@ -1310,6 +1331,11 @@
         "tokens": 1860,
         "type": "file"
       },
+      "scripts/session_capture.py": {
+        "hash": "154c3e7c0529",
+        "tokens": 2045,
+        "type": "file"
+      },
       "scripts/setup.sh": {
         "hash": "2b9d96c2d26a",
         "tokens": 555,
@@ -1326,11 +1352,12 @@
         "type": "file"
       },
       "scripts": {
-        "hash": "ba98a6c080c1",
+        "hash": "07e079a2bc1c",
         "children": [
           "scripts/context7-to-mv2.sh",
           "scripts/knowledge",
           "scripts/knowledge-cli.py",
+          "scripts/session_capture.py",
           "scripts/setup.sh",
           "scripts/start-server.sh",
           "scripts/webfetch-to-mv2.py"
@@ -1395,13 +1422,13 @@
         "type": "file"
       },
       "tests/test_knowledge.py": {
-        "hash": "ae25625479a6",
-        "tokens": 5936,
+        "hash": "80b5e48bfb2f",
+        "tokens": 8316,
         "type": "file"
       },
       "tests/test_llm_callback.py": {
-        "hash": "a9b61394969d",
-        "tokens": 1359,
+        "hash": "51af3a9c3660",
+        "tokens": 3742,
         "type": "file"
       },
       "tests/test_mcp_server.py": {
@@ -1424,13 +1451,18 @@
         "tokens": 1238,
         "type": "file"
       },
+      "tests/test_session_capture.py": {
+        "hash": "fa6e33079d0e",
+        "tokens": 4292,
+        "type": "file"
+      },
       "tests/test_sub_agent.py": {
-        "hash": "3e3fc0b3cb9d",
-        "tokens": 3509,
+        "hash": "63bfbe585589",
+        "tokens": 7536,
         "type": "file"
       },
       "tests": {
-        "hash": "b57f262b6a4c",
+        "hash": "1180a1452a90",
         "children": [
           "tests/__init__.py",
           "tests/e2e_validate.py",
@@ -1443,6 +1475,7 @@
           "tests/test_persistence.py",
           "tests/test_research.py",
           "tests/test_sandbox.py",
+          "tests/test_session_capture.py",
           "tests/test_sub_agent.py"
         ],
         "type": "dir"
@@ -1460,8 +1493,8 @@
         "type": "dir"
       },
       ".gitignore": {
-        "hash": "82dcc9cf691e",
-        "tokens": 39,
+        "hash": "2db62c7dc571",
+        "tokens": 38,
         "type": "file"
       },
       ".mcp.json": {
@@ -1470,8 +1503,8 @@
         "type": "file"
       },
       "CHANGELOG.md": {
-        "hash": "1c2db1ea285b",
-        "tokens": 297,
+        "hash": "971006020db8",
+        "tokens": 555,
         "type": "file"
       },
       "CLAUDE.md": {
@@ -1495,19 +1528,18 @@
         "type": "file"
       },
       "pyproject.toml": {
-        "hash": "a3ecec7552b1",
+        "hash": "a172c5d743b6",
         "tokens": 64,
         "type": "file"
       },
       "README.md": {
-        "hash": "6366d19d1060",
-        "tokens": 2442,
+        "hash": "46e38a6d8934",
+        "tokens": 3005,
         "type": "file"
       },
       "/": {
-        "hash": "c2c7a6d1fdc2",
+        "hash": "5c65229f1527",
         "children": [
-          ".claude",
           ".claude-plugin",
           "agents",
           "claude-integration",

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.1 - 2026-02-18
+
+### Fixed
+- `KnowledgeStore.open()` now passes `enable_vec=True, enable_lex=True` to `memvid_sdk.use()` so hybrid search works on reopened stores, not just newly created ones
+
 ## 1.2.0 - 2026-02-17
 
 ### Added

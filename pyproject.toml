@@ -1,6 +1,6 @@
 [project]
 name = "rlm-sandbox"
-version = "1.2.0"
+version = "1.2.1"
 description = "Sandboxed Python execution + zero-context doc search for Claude Code"
 requires-python = ">=3.11"
 license = "MIT"

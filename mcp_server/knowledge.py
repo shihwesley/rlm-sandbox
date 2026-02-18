@@ -63,7 +63,7 @@ class KnowledgeStore:
 
         if os.path.exists(self.path):
             from memvid_sdk import use
-            self.mem = use("basic", self.path)
+            self.mem = use("basic", self.path, enable_vec=True, enable_lex=True)
             log.info("Opened existing knowledge store: %s", self.path)
         else:
             os.makedirs(os.path.dirname(self.path), exist_ok=True)
