@@ -28,6 +28,11 @@ graph TD
     C --> AD[apple-docs-pipeline]
     SE --> AD
     C --> RE[recursive-execution]
+
+    TS[thread-support] --> SC[session-capture]
+    DR[deep-reasoning]
+    PL[parallel-llm] --> TT[token-tracking]
+    PT[programmatic-tools]
 ```
 
 ## Phase / Sprint / Spec Map
@@ -46,8 +51,16 @@ graph TD
 | 4 | 2 | orchestrator-integration | completed | doc-fetcher, search-engine |
 | 5 | 1 | apple-docs-pipeline | completed | mcp-server, search-engine |
 | 5 | 1 | recursive-execution | completed | mcp-server |
+| 6 | 1 | thread-support | draft | — |
+| 6 | 1 | deep-reasoning | draft | — |
+| 6 | 1 | parallel-llm | draft | — |
+| 6 | 1 | programmatic-tools | draft | — |
+| 6 | 2 | session-capture | draft | thread-support |
+| 6 | 2 | token-tracking | draft | parallel-llm |
 
 **Note (2026-02-13):** Phase 4 specs rewritten to use memvid-sdk instead of FAISS+fastembed. Decision reversal documented in findings.md.
+
+**Note (2026-02-17):** Phase 6 added — 5 gap-closing specs from Monolith comparison + programmatic tool calling spec inspired by Anthropic's API pattern.
 
 ## Spec Files
 
@@ -63,6 +76,12 @@ graph TD
 | doc-fetcher | docs/plans/specs/doc-fetcher-spec.md | ~101 | URL fetching, .md detection, sitemap, dual storage (raw + .mv2), freshness |
 | search-engine | docs/plans/specs/search-engine-spec.md | ~127 | Memvid knowledge engine: .mv2 backend, hybrid search, adaptive retrieval, timeline |
 | orchestrator-integration | docs/plans/specs/orchestrator-integration-spec.md | ~111 | Wire into /orchestrate + /interactive-planning, rlm_research compound tool |
+| thread-support | docs/plans/specs/thread-support-spec.md | ~50 | Add thread/namespace filtering to knowledge store |
+| deep-reasoning | docs/plans/specs/deep-reasoning-spec.md | ~50 | 3-phase reasoning signature for DSPy sub-agents |
+| parallel-llm | docs/plans/specs/parallel-llm-spec.md | ~45 | Threaded llm_query_batch in sandbox stub |
+| session-capture | docs/plans/specs/session-capture-spec.md | ~60 | Stop hook for auto-indexing session transcripts |
+| token-tracking | docs/plans/specs/token-tracking-spec.md | ~55 | Token usage accumulation + rlm_usage tool |
+| programmatic-tools | docs/plans/specs/programmatic-tools-spec.md | ~90 | Multi-tool sandbox dispatch (Anthropic programmatic tool calling pattern) |
 
 ## Findings
 -> See findings.md

@@ -32,6 +32,12 @@
 | doc-fetcher | 4 | 1 | draft (rewritten for memvid) | -- | 2026-02-13 |
 | search-engine | 4 | 1 | draft (rewritten for memvid) | -- | 2026-02-13 |
 | orchestrator-integration | 4 | 2 | draft (rewritten for memvid) | -- | 2026-02-13 |
+| thread-support | 6 | 1 | draft | -- | 2026-02-17 |
+| deep-reasoning | 6 | 1 | draft | -- | 2026-02-17 |
+| parallel-llm | 6 | 1 | draft | -- | 2026-02-17 |
+| session-capture | 6 | 2 | draft | -- | 2026-02-17 |
+| token-tracking | 6 | 2 | draft | -- | 2026-02-17 |
+| programmatic-tools | 6 | 1 | draft | -- | 2026-02-17 |
 
 ### Phase 0, Sprint 1: Sandbox Research Spike
 - **Status:** completed
@@ -207,11 +213,31 @@
   - mcp_server/server.py (modified — import + register_research_tools)
   - tests/test_research.py (created, 657 lines, 35 tests)
 
+## Session: 2026-02-17
+- Compared with WingchunSiu/Monolith (TreeHacks 2026 RLM-as-a-service)
+- Identified 5 gaps to close: session capture, deep reasoning, threads, parallel LLM, token tracking
+- Created Phase 6 with 6 new specs across 2 sprints
+- Design decisions: CLI bridge for capture, ThreadPoolExecutor for parallelism, dual-output for costs
+- Analyzed Anthropic's programmatic tool calling pattern — added 6th spec for multi-tool sandbox dispatch
+
+### Phase 6, Sprint 1: Thread Support + Deep Reasoning + Parallel LLM (parallel)
+- **Status:** pending
+- **Started:** --
+- Actions taken:
+  - Spec files written
+- Files created:
+  - docs/plans/specs/thread-support-spec.md
+  - docs/plans/specs/deep-reasoning-spec.md
+  - docs/plans/specs/parallel-llm-spec.md
+  - docs/plans/specs/session-capture-spec.md
+  - docs/plans/specs/token-tracking-spec.md
+  - docs/plans/specs/programmatic-tools-spec.md
+
 ## 5-Question Reboot Check
 | Question | Answer |
 |----------|--------|
-| Where am I? | All 10 specs complete. Full plan implemented. |
-| Where am I going? | Done. 10 MCP tools, 209 tests, knowledge store operational. |
-| What's the goal? | Memvid knowledge store: fetch docs into .mv2, hybrid search, zero context cost |
-| What have I learned? | Built-in fastembed broken — use get_embedder("huggingface") with put_many(). Parallel agents work well when specs have clean module boundaries. |
-| What have I done? | Complete MCP server: sandbox (Docker+IPython), DSPy sub-agents, session persistence, knowledge store (memvid .mv2), doc fetcher, research tools. 209 tests. |
+| Where am I? | Phase 6 planned, 5 new specs created, ready for implementation |
+| Where am I going? | Sprint 1: thread-support, deep-reasoning, parallel-llm (parallel). Sprint 2: session-capture, token-tracking |
+| What's the goal? | Close gaps from Monolith comparison: session capture, phased reasoning, threads, parallel LLM, cost tracking |
+| What have I learned? | Monolith's append-only flat text degrades; our vector search is better. Their 3-phase prompt strategy and session auto-upload are worth adopting. |
+| What have I done? | 10 specs completed (phases 0-5), 5 new specs planned (phase 6). ~248 tests, 20 MCP tools. |

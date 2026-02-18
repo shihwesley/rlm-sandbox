@@ -216,6 +216,43 @@ Hosting model: **host-side** (unchanged). Container has no network for model dow
 
 Full benchmark data: `research/knowledge-spike/benchmark_results.md`
 
+## Monolith Comparison (2026-02-17)
+
+Compared with WingchunSiu/Monolith (TreeHacks 2026 winner). Same RLM paper lineage, different architectural bets.
+
+### Monolith strengths we lack
+1. **Auto-capture session transcripts** — Stop hook uploads every session to Modal Volume. We have no equivalent auto-capture.
+2. **Explicit 3-phase reasoning strategy** in prompts.py (Recon → Filter → Aggregate). Our DSPy RLM uses generic loop.
+3. **Thread-based context accumulation** — thread_id concept groups context by topic. Our knowledge store is project-scoped only.
+4. **Cost-efficient model tiering** — GPT-5 orchestrates, GPT-5-nano does bulk. Prompt limits calls to 5-10.
+
+### Our strengths over Monolith
+1. Vector+BM25 hybrid search vs flat-text regex scanning
+2. Docker sandbox with null DNS, no API keys in container
+3. 20 MCP tools vs 2
+4. Local-first, no cloud dependency
+5. Session persistence preserves computation state (dill), not just text
+
+### Decision: Close 5 gaps
+- Session auto-capture via CLI bridge script (not MCP dependency)
+- Deep reasoning DSPy signature with 3-phase instructions
+- Thread/namespace filtering on knowledge store (metadata convention)
+- Parallel llm_query_batch via ThreadPoolExecutor in sandbox stub
+- Token tracking: accumulator in callback server + rlm_usage tool
+
+### Programmatic Tool Calling (2026-02-17)
+Analyzed Anthropic's `code_execution_20250825` + `allowed_callers` pattern. Our rlm-sandbox is already the "self-managed sandboxed execution" variant they describe. Gap: we only expose `llm_query()` in the sandbox. Their pattern exposes any tool marked with `allowed_callers`. Generalizing our callback server from single-function to multi-tool dispatch lets sandbox code call knowledge search, doc fetch, etc. — processing results programmatically without intermediate data entering Claude Code's context window.
+
+Key token savings: 10 tool calls programmatically costs ~1/10th the tokens vs direct tool calls, because intermediate results stay in the sandbox.
+
+### Design choices made
+| Choice | Decision | Rationale |
+|--------|----------|-----------|
+| Capture path | CLI bridge (standalone) | Works without MCP server running |
+| Parallelism | ThreadPoolExecutor in sandbox | No new deps, callback server already async |
+| Cost output | Sub-agent result + rlm_usage tool | Both per-run and cumulative visibility |
+| Multi-tool dispatch | Generalize callback server + auto-inject stubs | Matches Anthropic's pattern, additive to existing llm_query |
+
 ## Visual/Browser Findings
 - rlmgrep repo structure: 7 core Python files, ~800 lines total
 - Key pattern: Signature defines I/O, Interpreter executes code, RLM orchestrates
