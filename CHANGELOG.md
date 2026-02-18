@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.2.0 - 2026-02-17
+
+### Added
+- Thread/namespace filtering on knowledge store — `thread` param on `rlm_search`, `rlm_ask`, `rlm_ingest`
+- Deep reasoning DSPy signatures (`deep_reasoning`, `deep_reasoning_multi`) with 3-phase Recon/Filter/Aggregate strategy
+- `llm_query_batch(prompts)` for concurrent sub-LLM calls from sandbox code (ThreadPoolExecutor, max 8 workers)
+- Programmatic tool calling — sandbox code can call `search_knowledge()`, `ask_knowledge()`, `fetch_url()`, `load_file()`, `apple_search()` via `/tool_call` callback dispatch
+- Session auto-capture script (`scripts/session_capture.py`) — JSONL transcript parser with tag stripping, message-boundary chunking, standalone memvid ingestion
+- `rlm_usage` MCP tool — cumulative token stats, per-run diffs in sub-agent results, cost estimation (Haiku 4.5 pricing), reset support
+- 350 tests (up from 209)
+
+### Fixed
+- `KnowledgeStore.ingest()` and `ingest_many()` now call `commit()` instead of `seal()` for incremental indexing
+
 ## 1.0.0 - 2026-02-13
 
 ### Added

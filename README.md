@@ -1,7 +1,7 @@
 # rlm-sandbox
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-245%20passing-brightgreen.svg)]()
+[![Tests](https://img.shields.io/badge/tests-350%20passing-brightgreen.svg)]()
 [![Claude Code Plugin](https://img.shields.io/badge/Claude%20Code-plugin-8A2BE2.svg)]()
 
 Sandboxed Python execution + zero-context doc search for Claude Code. Run code in Docker without leaking API keys, search indexed documentation without reading files into the context window.
@@ -17,11 +17,12 @@ Found 3 results:
 
 ## Table of Contents
 
+- [What's New in v1.2](#whats-new-in-v12)
 - [Features](#features)
 - [Architecture](#architecture)
 - [Install](#install)
 - [Quick Start](#quick-start)
-- [Tools](#tools-16-total)
+- [Tools](#tools-21-total)
 - [Knowledge Store](#knowledge-store)
 - [Sandbox](#sandbox)
 - [Configuration](#configuration)
@@ -36,7 +37,27 @@ Found 3 results:
 - **Doc fetching** — grab URLs, sitemaps, or local files into dual storage (raw markdown + search index)
 - **One-call research** — `rlm_research("fastapi")` finds docs, fetches, indexes, done
 - **Session persistence** — sandbox state survives MCP server restarts via dill snapshots
+- **Thread filtering** — organize knowledge by topic or workflow with `thread` parameter on search/ingest
+- **Deep reasoning** — 3-phase DSPy signatures (Recon → Filter → Aggregate) for large-context tasks
+- **Parallel sub-LLM calls** — `llm_query_batch()` fires concurrent Haiku calls from sandbox code
+- **Programmatic tool calling** — sandbox code can call knowledge search, doc fetch, and other tools directly
+- **Session auto-capture** — Claude Code Stop hook indexes session transcripts into the knowledge store
+- **Token tracking** — per-run and cumulative usage stats with cost estimation via `rlm_usage`
 - **Plugin distribution** — installs as a Claude Code plugin with agents, skills, and hooks included
+
+## What's New in v1.2
+
+**Thread-aware knowledge store.** Search and ingest calls now accept an optional `thread` parameter. Documents tagged with a thread are only returned when that thread is queried — useful for separating session transcripts from library docs, or organizing by workflow.
+
+**Deep reasoning signatures.** Two new pre-built DSPy signatures (`deep_reasoning`, `deep_reasoning_multi`) encode a 3-phase strategy: scan the context for boundaries, filter chunks with keyword checks and sub-LLM calls, then aggregate into a final answer. Pass them by name to `rlm_sub_agent`.
+
+**Parallel sub-LLM calls.** Sandbox code can now call `llm_query_batch(["p1", "p2", "p3"])` to fire multiple Haiku calls concurrently via ThreadPoolExecutor. Failed individual calls return an error string instead of crashing the batch.
+
+**Programmatic tool calling.** The sandbox callback server now supports a `/tool_call` dispatch route. Five MCP tools are auto-injected as Python stubs into the container: `search_knowledge()`, `ask_knowledge()`, `fetch_url()`, `load_file()`, and `apple_search()`. Code in the sandbox can call these programmatically without results entering Claude's context window.
+
+**Session auto-capture.** A standalone `scripts/session_capture.py` script parses JSONL session transcripts, strips injected tags, chunks at message boundaries, and indexes everything into the project's `.mv2` file with `thread="sessions"`. Wire it as a Claude Code Stop hook to make every session searchable.
+
+**Token tracking.** The callback server now accumulates input/output token counts across all sub-LLM calls. `rlm_usage()` returns cumulative stats with cost estimation (Haiku 4.5 pricing). Per-run usage diffs are included in `rlm_sub_agent` results.
 
 ## Architecture
 
@@ -142,7 +163,7 @@ Output:
 Result: {"answer": "Paris"}
 ```
 
-## Tools (20 total)
+## Tools (21 total)
 
 ### Sandbox (requires Docker)
 
@@ -159,10 +180,10 @@ Result: {"answer": "Paris"}
 
 | Tool | What it does |
 |------|-------------|
-| `rlm_search(query, top_k, mode)` | Hybrid search (BM25 + vector) over indexed docs |
-| `rlm_ask(question, context_only)` | RAG Q&A or context-only chunk retrieval |
+| `rlm_search(query, top_k, mode, thread)` | Hybrid search (BM25 + vector) over indexed docs |
+| `rlm_ask(question, context_only, thread)` | RAG Q&A or context-only chunk retrieval |
 | `rlm_timeline(since, until)` | Browse docs by recency |
-| `rlm_ingest(title, text)` | Manually add content to the index |
+| `rlm_ingest(title, text, thread)` | Manually add content to the index |
 
 ### Fetching (no Docker needed)
 
@@ -188,6 +209,7 @@ Result: {"answer": "Paris"}
 | `rlm_research(topic)` | Find docs, fetch, index, confirm |
 | `rlm_knowledge_status()` | Show indexed sources and sizes |
 | `rlm_knowledge_clear()` | Wipe the .mv2 index |
+| `rlm_usage(reset)` | Cumulative token stats and cost estimate |
 
 ## Knowledge Store
 
@@ -273,7 +295,7 @@ A PostToolUse hook on `mcp__context7__query-docs` nudges Claude to also index Co
 Bug reports and PRs welcome.
 
 ```bash
-# Run the full test suite (245 tests)
+# Run the full test suite (350 tests)
 pytest tests/ -v
 
 # Knowledge/fetcher/research only (no Docker)
