@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.1.0 - 2026-02-20
+
+### Added
+- **Apple docs domain stores** — split the monolithic apple-docs.mv2 into 15 domain-specific stores (spatial-computing, swiftui, ml-ai, foundation-core, networking, etc.). Each store stays under the memvid size limit and scopes search results to a single domain.
+- `scripts/apple_domain_ingest.py` — batch ingestion script that splits 300+ Apple framework docs into domain stores
+- `scripts/apple_bulk_ingest.py` — single-store bulk ingestion (for smaller domain sets)
+- `mcp_server/apple_extract.py` — Apple docs extraction utilities
+- `skills/apple-research/SKILL.md` — Apple API research skill
+- **Coupling assessment** in research pipeline (Step 1b.5) — zero-cost structural check on the question tree that flags domains with high internal coupling. Recommends skill graph creation when sub-topics form a web rather than a list.
+- **Skill graph gate** (Step 5b.5) — after artifact generation, suggests `/create-skill-graph` for high-coupling domains. Records recommendation in `sources.json`.
+- Coupling score in research report output
+
+### Changed
+- `apple_docs.py` — expanded with domain-aware extraction and chunking
+- Research report now includes coupling score (N/5) and graph recommendation
+
 ## 2.0.0 - 2026-02-18
 
 ### Changed — Research Pipeline Redesign

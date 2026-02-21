@@ -171,6 +171,32 @@ def _slugify(text: str) -> str:
     return slug.strip("-") or "section"
 
 
+def _truncate_preserving_code(text: str, max_chars: int = 8000) -> str:
+    """Truncate text but never cut inside a code block.
+
+    If the text is under max_chars, return as-is. Otherwise, find a safe
+    truncation point that doesn't split a ``` block.
+    """
+    if len(text) <= max_chars:
+        return text
+
+    # Find all code block boundaries
+    in_code = False
+    last_safe_point = 0
+    for i, char in enumerate(text):
+        if text[i:i + 3] == "```":
+            in_code = not in_code
+        if not in_code and i <= max_chars:
+            # Track last point outside a code block near a newline
+            if char == "\n":
+                last_safe_point = i
+
+    if last_safe_point > max_chars * 0.5:
+        return text[:last_safe_point] + "\n...(truncated, code blocks preserved)"
+    # Fallback: hard cut if no safe point found
+    return text[:max_chars] + "\n...(truncated)"
+
+
 def _chunk_markdown(text: str, framework: str) -> list[dict[str, Any]]:
     """Split markdown on ``## `` headings into chunks for ingestion.
 
@@ -433,6 +459,171 @@ def register_apple_docs_tools(mcp) -> None:
             f"Ingested {library} docs "
             f"({len(content)} chars, {len(frame_ids)} frames)"
         )
+
+    @mcp.tool()
+    async def rlm_apple_bulk_ingest(
+        ctx: Context,
+        pattern: str = "*.md",
+    ) -> str:
+        """Ingest all exported Apple doc files from docs/apple/ into the knowledge store.
+
+        Reads every .md file in DocSetQuery/docs/apple/, chunks on ## headings,
+        and indexes into the .mv2 store for hybrid BM25+vector search.
+
+        Run this once after a batch export to make all 317 frameworks searchable.
+
+        Args:
+            pattern: Glob pattern for files to ingest (default "*.md")
+        """
+        store = _get_store_from_ctx(ctx)
+        if store is None:
+            return "Knowledge store not available."
+
+        files = sorted(DOCS_DIR.glob(pattern))
+        if not files:
+            return f"No files matching '{pattern}' in {DOCS_DIR}"
+
+        total_chunks = 0
+        total_bytes = 0
+        succeeded = 0
+        failed: list[str] = []
+
+        for f in files:
+            framework = f.stem
+            try:
+                text = await asyncio.to_thread(f.read_text, "utf-8")
+                chunks = _chunk_markdown(text, framework)
+                if chunks:
+                    store.ingest_many(chunks)
+                    total_chunks += len(chunks)
+                    total_bytes += len(text)
+                    succeeded += 1
+                    log.info("Ingested %s: %d chunks", framework, len(chunks))
+            except Exception as exc:
+                log.warning("Failed to ingest %s: %s", framework, exc)
+                failed.append(f"{framework}: {exc}")
+
+        report = (
+            f"Bulk ingest complete: {succeeded}/{len(files)} files, "
+            f"{total_chunks} chunks, {total_bytes:,} bytes"
+        )
+        if failed:
+            report += f"\nFailed ({len(failed)}):\n" + "\n".join(f"  - {e}" for e in failed)
+        return report
+
+    @mcp.tool()
+    async def rlm_apple_extract(
+        query: str,
+        ctx: Context,
+        frameworks: str | None = None,
+        role_filter: str | None = None,
+        max_results: int = 10,
+        preserve_code: bool = True,
+    ) -> str:
+        """Deep extraction from exported Apple docs — finds and returns full sections.
+
+        Two-stage: discovery via .mv2 search, then targeted file reads to get
+        complete content with code blocks preserved verbatim. Use this when you
+        need copy-paste-ready code examples and full API context, not just snippets.
+
+        Args:
+            query: What to find (e.g. "immersive space setup", "hand tracking gesture")
+            frameworks: Comma-separated framework filter (e.g. "visionos,arkit,realitykit")
+            role_filter: Filter by role tag (e.g. "Sample Code", "Article", "Class")
+            max_results: Max sections to return (default 10)
+            preserve_code: If True, never truncate code blocks (default True)
+        """
+        parts: list[str] = []
+
+        # Stage 1: Discovery via knowledge store
+        store = _get_store_from_ctx(ctx)
+        discovery_hits: list[dict] = []
+        if store is not None:
+            try:
+                search_q = query
+                if frameworks:
+                    search_q = f"{frameworks.replace(',', ' ')} {query}"
+                raw_results = store.search(search_q, top_k=max_results * 2)
+                for sr in raw_results:
+                    title = sr.get("title", "")
+                    text = sr.get("text", "")
+                    # Apply role filter if specified
+                    if role_filter and role_filter.lower() not in text[:200].lower():
+                        continue
+                    # Apply framework filter
+                    if frameworks:
+                        fw_list = [fw.strip().lower() for fw in frameworks.split(",")]
+                        fw_from_title = title.split("/")[0].lower() if "/" in title else ""
+                        if fw_from_title and fw_from_title not in fw_list:
+                            continue
+                    discovery_hits.append(sr)
+                    if len(discovery_hits) >= max_results:
+                        break
+            except Exception as exc:
+                log.warning("Knowledge store search failed: %s", exc)
+
+        # Stage 2: Targeted file reads for full sections
+        if not discovery_hits:
+            # Fallback: direct file scan via grep-style heading search
+            fw_files = sorted(DOCS_DIR.glob("*.md"))
+            if frameworks:
+                fw_list = [fw.strip().lower() for fw in frameworks.split(",")]
+                fw_files = [f for f in fw_files if f.stem.lower() in fw_list]
+
+            query_lower = query.lower()
+            for f in fw_files:
+                text = await asyncio.to_thread(f.read_text, "utf-8")
+                lines = text.splitlines()
+                for i, line in enumerate(lines):
+                    if not line.startswith("## "):
+                        continue
+                    heading = line[3:].strip()
+                    if query_lower not in heading.lower():
+                        continue
+                    if role_filter and f"({role_filter})" not in heading:
+                        continue
+                    # Extract this section
+                    section_lines = [line]
+                    for j in range(i + 1, len(lines)):
+                        if lines[j].startswith("## "):
+                            break
+                        section_lines.append(lines[j])
+                    section = "\n".join(section_lines).strip()
+                    discovery_hits.append({
+                        "title": f"{f.stem}/{heading}",
+                        "text": section,
+                    })
+                    if len(discovery_hits) >= max_results:
+                        break
+                if len(discovery_hits) >= max_results:
+                    break
+
+        if not discovery_hits:
+            return f"No results for '{query}' in Apple docs."
+
+        # Stage 3: Format output with full code blocks preserved
+        for hit in discovery_hits:
+            title = hit.get("title", "untitled")
+            text = hit.get("text", "")
+
+            if preserve_code:
+                # Never truncate inside a code block
+                truncated = _truncate_preserving_code(text, max_chars=8000)
+            else:
+                truncated = text[:4000]
+                if len(text) > 4000:
+                    truncated += "\n...(truncated)"
+
+            parts.append(f"### {title}")
+            parts.append(truncated)
+            parts.append("")
+
+        header = f"Extracted {len(discovery_hits)} sections for '{query}'"
+        if frameworks:
+            header += f" (frameworks: {frameworks})"
+        if role_filter:
+            header += f" (role: {role_filter})"
+        return header + "\n\n" + "\n".join(parts)
 
     @mcp.tool()
     async def rlm_apple_lookup(

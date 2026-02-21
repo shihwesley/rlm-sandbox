@@ -183,9 +183,9 @@
     },
     {
       "path": "docs/.mercator.json",
-      "tokens": 12970,
+      "tokens": 12974,
       "size_bytes": 41266,
-      "hash": "4af86cd8e4bb"
+      "hash": "be722fc5c223"
     },
     {
       "path": "docs/.mercator.json.tmp",
@@ -213,9 +213,9 @@
     },
     {
       "path": "mcp_server/apple_docs.py",
-      "tokens": 3310,
-      "size_bytes": 14965,
-      "hash": "ade0befa34a0"
+      "tokens": 4055,
+      "size_bytes": 18533,
+      "hash": "18bae7c9dc87"
     },
     {
       "path": "mcp_server/docker_manager.py",
@@ -249,9 +249,9 @@
     },
     {
       "path": "mcp_server/research.py",
-      "tokens": 2237,
-      "size_bytes": 9700,
-      "hash": "e69af1664e3b"
+      "tokens": 2888,
+      "size_bytes": 12701,
+      "hash": "3f456a816258"
     },
     {
       "path": "mcp_server/server.py",
@@ -537,9 +537,9 @@
     },
     {
       "path": "scripts/knowledge-cli.py",
-      "tokens": 1858,
-      "size_bytes": 7637,
-      "hash": "62ee6ca607eb"
+      "tokens": 3035,
+      "size_bytes": 13396,
+      "hash": "1d08c1fc20df"
     },
     {
       "path": "scripts/session_capture.py",
@@ -566,6 +566,12 @@
       "hash": "5b33cd9f2ec7"
     },
     {
+      "path": "skills/audit/SKILL.md",
+      "tokens": 473,
+      "size_bytes": 1930,
+      "hash": "53f9854e5a9d"
+    },
+    {
       "path": "skills/knowledge-status/SKILL.md",
       "tokens": 2298,
       "size_bytes": 9731,
@@ -585,9 +591,9 @@
     },
     {
       "path": "tests/e2e_validate.py",
-      "tokens": 1966,
+      "tokens": 1965,
       "size_bytes": 8559,
-      "hash": "7388e7e805a9"
+      "hash": "449a16dc509a"
     },
     {
       "path": "tests/test_apple_docs.py",
@@ -734,16 +740,17 @@
     "sandbox",
     "scripts",
     "skills",
+    "skills/audit",
     "skills/knowledge-status",
     "skills/research",
     "tests",
     "workspace"
   ],
-  "total_tokens": 172625,
-  "total_files": 119,
+  "total_tokens": 175674,
+  "total_files": 120,
   "skipped": [],
   "merkle": {
-    "root_hash": "2d300deeffce",
+    "root_hash": "e460c20f7f5c",
     "tree": {
       ".claude-plugin/plugin.json": {
         "hash": "c09ce2225b60",
@@ -957,8 +964,8 @@
         "type": "dir"
       },
       "docs/.mercator.json": {
-        "hash": "4af86cd8e4bb",
-        "tokens": 12970,
+        "hash": "be722fc5c223",
+        "tokens": 12974,
         "type": "file"
       },
       "docs/.mercator.json.tmp": {
@@ -972,7 +979,7 @@
         "type": "file"
       },
       "docs": {
-        "hash": "207c734ba97c",
+        "hash": "263cb83938fd",
         "children": [
           "docs/plans",
           "docs/.mercator.json",
@@ -999,8 +1006,8 @@
         "type": "file"
       },
       "mcp_server/apple_docs.py": {
-        "hash": "ade0befa34a0",
-        "tokens": 3310,
+        "hash": "18bae7c9dc87",
+        "tokens": 4055,
         "type": "file"
       },
       "mcp_server/docker_manager.py": {
@@ -1029,8 +1036,8 @@
         "type": "file"
       },
       "mcp_server/research.py": {
-        "hash": "e69af1664e3b",
-        "tokens": 2237,
+        "hash": "3f456a816258",
+        "tokens": 2888,
         "type": "file"
       },
       "mcp_server/server.py": {
@@ -1064,7 +1071,7 @@
         "type": "file"
       },
       "mcp_server": {
-        "hash": "dedf91a33da4",
+        "hash": "b519e9b06c49",
         "children": [
           "mcp_server/__init__.py",
           "mcp_server/apple_docs.py",
@@ -1375,8 +1382,8 @@
         "type": "file"
       },
       "scripts/knowledge-cli.py": {
-        "hash": "62ee6ca607eb",
-        "tokens": 1858,
+        "hash": "1d08c1fc20df",
+        "tokens": 3035,
         "type": "file"
       },
       "scripts/session_capture.py": {
@@ -1400,7 +1407,7 @@
         "type": "file"
       },
       "scripts": {
-        "hash": "434a8b6c6d93",
+        "hash": "91078134f930",
         "children": [
           "scripts/context7-to-mv2.sh",
           "scripts/knowledge",
@@ -1409,6 +1416,18 @@
           "scripts/setup.sh",
           "scripts/start-server.sh",
           "scripts/webfetch-to-mv2.py"
+        ],
+        "type": "dir"
+      },
+      "skills/audit/SKILL.md": {
+        "hash": "53f9854e5a9d",
+        "tokens": 473,
+        "type": "file"
+      },
+      "skills/audit": {
+        "hash": "4aa71e0b5d55",
+        "children": [
+          "skills/audit/SKILL.md"
         ],
         "type": "dir"
       },
@@ -1437,8 +1456,9 @@
         "type": "dir"
       },
       "skills": {
-        "hash": "2e86294a5aa2",
+        "hash": "1059c79635fb",
         "children": [
+          "skills/audit",
           "skills/knowledge-status",
           "skills/research"
         ],
@@ -1450,8 +1470,8 @@
         "type": "file"
       },
       "tests/e2e_validate.py": {
-        "hash": "7388e7e805a9",
-        "tokens": 1966,
+        "hash": "449a16dc509a",
+        "tokens": 1965,
         "type": "file"
       },
       "tests/test_apple_docs.py": {
@@ -1510,7 +1530,7 @@
         "type": "file"
       },
       "tests": {
-        "hash": "71ddff529a3b",
+        "hash": "47a32169cdc9",
         "children": [
           "tests/__init__.py",
           "tests/e2e_validate.py",
@@ -1586,7 +1606,7 @@
         "type": "file"
       },
       "/": {
-        "hash": "2d300deeffce",
+        "hash": "e460c20f7f5c",
         "children": [
           ".claude-plugin",
           "agents",

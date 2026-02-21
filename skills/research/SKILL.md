@@ -94,6 +94,13 @@ Research complete: <topic>
 - Reload later: /research load <topic>
 ```
 
+After the agent returns, check `sources.json` for a coupling assessment. If `coupling.recommendation == "skill-graph"`, append to your report:
+
+```
+Domain coupling: high (score N/5)
+→ Create navigable skill graph: /create-skill-graph <slug>
+```
+
 ## Loading Existing Research
 
 If the user says `/research load <topic>`:

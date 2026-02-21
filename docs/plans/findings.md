@@ -258,3 +258,25 @@ Key token savings: 10 tool calls programmatically costs ~1/10th the tokens vs di
 - Key pattern: Signature defines I/O, Interpreter executes code, RLM orchestrates
 - Anthropic sandboxing docs at code.claude.com/docs/en/sandboxing (redirected from docs.anthropic.com)
 - sandbox-runtime repo has TypeScript SandboxManager API with initialize/wrapWithSandbox/reset
+
+## Knowledge Store Findings
+
+### Chunk Normalization Problem (2026-02-18, migration audit)
+
+During batch migration of old `~/.claude/docs/` research into the new `~/.claude/research/` pipeline, search quality varied with document size disparity.
+
+**Observed:** When ingesting mixed-size documents into a single project store, large documents dominate search results. In the `aviation-geospatial` project, FlightAware's 47K-char doc was the only result returned for every query — the 3-5K docs (OpenSky, GeoNames, Cesium) never surfaced despite containing relevant content.
+
+**Contrast:** The `sam3d-baseball` project had evenly-sized docs (5-10K each) and search worked well across all 8 documents — every query returned the expected doc as top hit.
+
+**Root cause hypothesis:** Single-frame ingestion for small docs means the entire doc is one chunk. When a large doc also gets one frame, the embedding averages over more content and becomes a "generalist" vector that matches many queries at moderate scores, crowding out smaller docs whose single embedding may be more specific but lower-scoring.
+
+**Proposed fix: Chunk normalization during ingestion.**
+- Split documents into ~2-4K char chunks before embedding
+- Each chunk becomes its own frame with title + chunk index metadata
+- This equalizes representation across documents of different sizes
+- Already standard practice in RAG systems (LangChain, LlamaIndex all do this)
+
+**Impact:** Affects any project that mixes API reference pages (often 20-50K) with overview docs (2-5K). Most real research topics have this distribution.
+
+**Priority:** Medium-high — directly affects search quality, which is the core value prop of the knowledge store.

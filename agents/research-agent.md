@@ -95,6 +95,34 @@ Each branch gets a **source strategy**: what kind of source answers this branch 
 
 If the user provided seed URLs, assign them to the right branches.
 
+### Step 1b.5: Coupling assessment
+
+After building the question tree, assess whether the domain has high internal coupling — meaning sub-topics reference each other and understanding one area requires context from others.
+
+**Check these indicators against the question tree:**
+- [ ] 3+ branches where answering one requires concepts from another branch
+- [ ] The topic has layered abstractions (foundations → patterns → advanced)
+- [ ] Multiple frameworks or tools interact within the domain
+- [ ] Concepts form a web rather than a list (A depends on B which relates to C)
+- [ ] The domain is broad enough that a single expertise doc can't cover navigation between sub-areas
+
+**Score**: 3+ indicators = **high coupling**.
+
+Record the assessment in `sources.json` under a `coupling` field:
+```json
+{
+  "coupling": {
+    "score": 4,
+    "indicators": ["layered abstractions", "multi-framework interaction", "web of concepts", "broad domain"],
+    "recommendation": "skill-graph"
+  }
+}
+```
+
+If score < 3, set `"recommendation": "flat"` — the expertise doc and optional skill/subagent are sufficient.
+
+This assessment costs nothing — it's a structural observation about the question tree, not additional research. It's used in Phase 5 to decide whether to offer skill graph creation.
+
 ### Step 1c: Write artifacts
 
 ```bash
@@ -485,6 +513,48 @@ Update `~/.claude/research/<slug>/sources.json` with an `artifacts` field:
 }
 ```
 
+### Step 5b.5: Skill graph gate
+
+Check if the coupling assessment from Step 1b.5 flagged high coupling:
+
+```bash
+HOME_DIR=$(echo ~)
+# Read coupling recommendation from sources.json
+```
+
+**If `coupling.recommendation == "skill-graph"`:**
+
+Report to the user:
+```
+This domain has high internal coupling (score: N/5).
+The sub-topics reference each other — a flat expertise doc won't help agents navigate between areas.
+
+Recommend creating a skill graph. Run: /create-skill-graph <slug>
+
+The graph will:
+- Turn question tree branches into navigable MOCs
+- Link to the generated skill/subagent
+- Give agents a 3-read path to the right knowledge
+```
+
+Record the recommendation in sources.json:
+```json
+{
+  "artifacts": {
+    "skill": "...",
+    "subagent": "...",
+    "graph_recommended": true,
+    "graph_path": null
+  }
+}
+```
+
+If the user runs `/create-skill-graph <slug>` later, it reads `question-tree.md` to derive the MOC structure and updates `artifacts.graph_path` with the result.
+
+**If `coupling.recommendation == "flat"`:**
+
+Skip — the expertise doc and optional skill/subagent are sufficient. No graph needed.
+
 ### Step 5c: Cleanup
 
 ```bash
@@ -501,7 +571,13 @@ Research complete: <topic>
 - Deep-dive: rlm_search(query="...", project="<slug>")
 - Skill: ~/.claude/skills/<slug>/SKILL.md (if generated)
 - Subagent: ~/.claude/agents/<slug>-specialist.md (if generated)
+- Coupling: <score>/5 — <"skill graph recommended" | "flat structure sufficient">
 - Reload later: /research load <topic>
+```
+
+If graph was recommended, append:
+```
+→ Create navigable skill graph: /create-skill-graph <slug>
 ```
 
 ---
